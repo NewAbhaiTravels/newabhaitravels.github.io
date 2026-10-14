@@ -1,0 +1,12 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+
+# Original photo/video exports and archives: keep these on your computer, not in the repo
+*.zip
+*.mov
+archive/
