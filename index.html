@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data:; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <title>New Abhai Travels | Curated Journeys</title>
+    <meta name="description" content="New Abhai Travels: cars, tempo travellers and buses for every journey, arranged since 2000. Rates confirmed by call or WhatsApp, no online payment.">
+    <meta name="theme-color" content="#F9F9F8">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/favicon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+
+    <!-- Phosphor Icons: a lighter, thinner icon set than most, fits the restrained aesthetic here -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" integrity="sha384-6p9AefaqUhEVheRlj1mpAkbngHXy9mbYMrIdcIt4Jlc9lOLIablJq3bBsLOjGwZ7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" integrity="sha384-pPVoXE8ft+zxKtxIDDI7SfTK6y95NHm4qa+hKEg/hs8VkjW5IP+9/dGOPCbDpUPl" crossorigin="anonymous">
+
+    <!-- Google Fonts: Syne (expressive display) & Inter (clean utilitarian body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F9F9F8;
+            color: #1A1A1A;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F9F9F8; }
+        ::-webkit-scrollbar-thumb { background: #D1D1CF; }
+        ::-webkit-scrollbar-thumb:hover { background: #1A1A1A; }
+
+        /* Fluid typography: interpolates continuously with viewport width, no jumps at breakpoints. */
+        .text-fluid-hero { font-size: clamp(2.75rem, 1.5rem + 7vw, 8rem); line-height: 1; letter-spacing: -0.03em; }
+        .text-fluid-h2 { font-size: clamp(1.875rem, 1.1rem + 4vw, 4.5rem); line-height: 1.1; letter-spacing: -0.02em; }
+
+        /* Sized so "Cars On Rent." never wraps onto a second line — capped conservatively, then
+           bumped once there's enough viewport width to grow further without risking a wrap.
+           The min(..., 1rem + 15vh) term is what makes this height-aware, not just width-aware: on
+           a laptop with plenty of width but limited height (a real browser window at 1366×768, once
+           its own toolbars/bookmarks bar eat into that), the plain width-based formula doesn't know
+           the screen is short and sizes the heading as if there were room to spare, overflowing the
+           hero and overlapping the fixed navbar above it. The height term only takes over once height
+           is actually the tighter constraint — at the reference desktop sizes (1440×900, 1920×1080)
+           it's never the smaller of the two, so the rendered size there is unchanged from before. */
+        .text-fluid-hero-wide { font-size: clamp(2.5rem, min(1.4rem + 9.5vw, 1rem + 15vh), 8.5rem); line-height: 1.05; letter-spacing: -0.05em; }
+        @media (min-width: 768px) {
+            .text-fluid-hero-wide { line-height: 0.95; }
+        }
+        @media (min-width: 1600px) {
+            .text-fluid-hero-wide { font-size: min(10rem, 1rem + 15vh); }
+        }
+
+        /* A phone rotated to landscape is wide enough to cross the md: breakpoint (so it gets the
+           desktop nav) but only ~350-430px TALL — nothing like an actual desktop, which is always wide
+           AND tall. Even the min(...vh) term above only shrinks the heading so far (its own floor is
+           2.5rem); below 500px of height that's still too large relative to the very tight vertical
+           space, so this trims it further and tightens up the surrounding spacing to match. #hero's
+           min-height (set unconditionally now, not just here) remains the ultimate safety net for
+           anything even this doesn't fully account for. */
+        @media (max-height: 500px) {
+            #hero .text-fluid-hero-wide { font-size: clamp(1.75rem, 3rem + 2vh, 3.25rem) !important; line-height: 1.1 !important; }
+            #hero-content { padding-top: 5.5rem; padding-bottom: 2rem !important; }
+            #hero-content .hero-fade-up-d1 { margin-bottom: 0.5rem !important; }
+            #hero-content .hero-fade-up-d3:first-of-type { margin-top: 1rem !important; }
+            #hero-content .hero-fade-up-d3 + .hero-fade-up-d3 { margin-top: 1rem !important; padding-top: 0.75rem !important; }
+        }
+
+        /* Mobile only: the source photo is landscape, so a portrait crop keeps only a narrow vertical
+           sliver of the road. Rotating the wrapper 90deg (with width/height swapped to 100vh/100vw
+           before rotating) lets the road's long edge run down the screen instead. The img inside keeps
+           its own w-full/h-full/object-cover and reveal-img animation untouched — only the wrapper turns. */
+        .hero-img-wrap { top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; }
+        @media (max-width: 767px) {
+            .hero-img-wrap {
+                /* Position so the box's own center lands on the section's center, then rotate in
+                   place around that center (default transform-origin) — avoids the usual
+                   translate(-50%,-50%) trick, whose percentages resolve against this box's own
+                   (pre-rotation, width/height-swapped) size and land off-center once rotated. */
+                top: calc((100% - 100vw) / 2);
+                left: calc((100% - 100vh) / 2);
+                right: auto;
+                bottom: auto;
+                width: 100vh;
+                height: 100vw;
+                transform: rotate(90deg);
+            }
+            /* Zoom the photo in a bit more so the crop feels deliberate rather than empty.
+               Positioned with top/left (not margin, whose percentages resolve against the
+               container's WIDTH on every side, over-shifting a non-square box) and left off
+               object-fit's own scaling (not transform, which would fight reveal-img's scale
+               animation on the same property). Descendant selector outranks the plain
+               w-full/h-full utility classes still on the element, regardless of source order. */
+            .hero-img-wrap img {
+                position: absolute;
+                top: -15%;
+                left: -15%;
+                width: 130%;
+                max-width: none;
+                height: 130%;
+                /* The photo's own aspect ratio leaves no horizontal crop slack against this box, so
+                   the first (X) value below is inert — all the repositioning happens on the second
+                   (Y) value, which (because the wrapper is rotated 90deg for mobile) maps to the
+                   screen's horizontal axis, not vertical. Lower = further right on screen, and also
+                   brings more of the tree-lined sidewalk into view instead of plain asphalt. */
+                object-position: 50% 8%;
+            }
+        }
+
+        /* Invisible form inputs: no box, just a hairline that solidifies on focus. */
+        .input-minimal {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #D1D1CF;
+            padding: 1rem 0;
+            transition: border-color 0.4s ease;
+        }
+        .input-minimal:focus { outline: none; border-bottom-color: #1A1A1A; }
+
+        /* Hero image: a slow settle-in instead of a wipe — starts slightly zoomed and faded, eases down
+           to its resting scale, like the shot is just coming into frame. */
+        .reveal-img { opacity: 0; transform: scale(1.12); animation: revealSettle 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes revealSettle { to { opacity: 1; transform: scale(1); } }
+
+        /* Hero headline: eyebrow, headline and subtext each fade and rise into place as one block,
+           staggered in sequence rather than animated word by word. */
+        .hero-fade-up { opacity: 0; transform: translateY(28px); animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .hero-fade-up-d1 { animation-delay: 0.15s; }
+        .hero-fade-up-d2 { animation-delay: 0.35s; }
+        .hero-fade-up-d3 { animation-delay: 0.6s; }
+        @keyframes heroFadeUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* Mobile-only entrance: centered content gets a punchier pop-in — scale and blur settling
+           with a slight overshoot — instead of the plain rise-and-fade used on desktop. */
+        @media (max-width: 767px) {
+            .hero-fade-up {
+                transform: translateY(20px) scale(0.88);
+                filter: blur(8px);
+                animation-name: heroFadeUpMobile;
+                animation-duration: 0.85s;
+                animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            @keyframes heroFadeUpMobile { to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+
+            /* Percentage-based stops (the desktop default) scale with the section's own height, which
+               is 100dvh — but the text block's own height is roughly fixed regardless of device. On a
+               tall phone (iPhone Plus/Max class) the same percentages push the opaque zone far below
+               where the heading actually sits, leaving it over bare image instead of the white fade.
+               Anchoring the stops to a fixed pixel distance from the BOTTOM instead keeps the opaque
+               "landing zone" the same height on every phone, tall or short, so the heading always
+               lands on it the same way it does on desktop. */
+            .hero-gradient { background: linear-gradient(to bottom, transparent calc(100% - 680px), rgba(240, 239, 234, 0.85) calc(100% - 480px), rgba(240, 239, 234, 1) calc(100% - 380px)) !important; }
+        }
+
+        /* Every photo on the site shares one desaturated, contrast-boosted treatment — reads as one
+           considered photo essay rather than a stock-photo grab-bag. */
+        .editorial-img { filter: contrast(1.15) saturate(0.55); }
+
+        .fleet-card img { transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .fleet-card:hover img { transform: scale(1.04); }
+
+        /* Hover inverts the whole card (light-on-dark), so it's unmistakable which one is highlighted. */
+        .fleet-card, .fleet-name, .fleet-chip, .fleet-status, .fleet-view-btn, .fleet-index-badge, .fleet-divider {
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+        }
+        .fleet-card:hover { background-color: #1A1A1A; border-color: #1A1A1A; }
+        .fleet-card:hover .fleet-name { color: #F9F9F8; }
+        .fleet-card:hover .fleet-chip { background-color: rgba(249, 249, 248, 0.12); color: #F9F9F8; }
+        .fleet-card:hover .fleet-divider { border-color: rgba(249, 249, 248, 0.15); }
+        .fleet-card:hover .fleet-status { color: #6ee7b7; }
+        .fleet-card:hover .fleet-index-badge { background-color: rgba(249, 249, 248, 0.15); color: #F9F9F8; }
+        .fleet-card:hover .fleet-view-btn { background-color: #F9F9F8; color: #1A1A1A; }
+
+        /* Fleet browsing: a swipable row on mobile (easier one-handed than a tall stack), switching to
+           a wrapping grid from md up so every vehicle is visible at once with no scrolling. */
+        /* touch-action: pan-x pan-y (not just pan-x) — a lone pan-x tells the browser this element
+           ONLY ever pans horizontally, which blocks vertical page-scroll outright for any touch that
+           happens to start on a card (exactly where a thumb scrolling down the page will often land).
+           Allowing both lets the browser's own gesture recognizer pick the axis that matches the
+           swipe's actual direction: horizontal drags move the card row, vertical drags keep scrolling
+           the page normally, same as everywhere else on the site. */
+        .fleet-grid { display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0.25rem 0.25rem 0.75rem; margin: -0.25rem -0.25rem 0; -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; scrollbar-width: none; }
+        /* Native scrollbar hidden everywhere (not just iOS Safari, which never allows styling it
+           anyway) — the always-visible #fleet-scroll-thumb bar below the row is the one and only scroll
+           indicator now, instead of sitting duplicated right on top of a second, native one on browsers
+           that do support styling it (desktop, Android Chrome). */
+        .fleet-grid::-webkit-scrollbar { display: none; }
+        .fleet-card, .fleet-request-card { flex: 0 0 auto; scroll-snap-align: start; width: min(80vw, 300px); }
+        @media (min-width: 768px) {
+            /* auto-fill (not auto-fit): keeps card width consistent even when a filter leaves only
+               one or two results — auto-fit would collapse the unused column tracks and stretch
+               the remaining card(s) to fill the whole row instead. */
+            .fleet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2rem; overflow-x: visible; padding: 0; margin: 0; }
+            .fleet-card, .fleet-request-card { width: auto; }
+        }
+        @keyframes swipe-hint-bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(6px); }
+        }
+        .swipe-hint-arrow { display: inline-block; animation: swipe-hint-bounce 1.4s ease-in-out infinite; }
+
+        /* Swipe hint hand: was markup-only until now — referenced this class but had no actual
+           animation, so it just sat there static. Fades in, drags left (the same direction a finger
+           moves to reveal the next card), fades out, resets. */
+        .swipe-hand-anim { animation: swipeHandGesture 2.2s ease-in-out infinite; }
+        @keyframes swipeHandGesture {
+            0% { transform: translateX(16px); opacity: 0; }
+            18% { opacity: 1; }
+            55% { transform: translateX(-36px); opacity: 1; }
+            72% { opacity: 0; }
+            73% { transform: translateX(16px); }
+            100% { opacity: 0; }
+        }
+        .swipe-hint-dismissed { opacity: 0 !important; transition: opacity 0.3s ease; }
+
+        /* Mockup cursor: sits over a mini step-mockup and periodically "clicks" the relevant spot —
+           a tiny tap (scale dip) plus an expanding ring, so the mockup reads as something happening
+           rather than a static screenshot. */
+        .mock-cursor { position: absolute; margin-top: -4px; margin-left: -2px; animation: cursorTap 2.6s ease-in-out infinite; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3)); }
+        .mock-cursor-ring { position: absolute; top: -3px; left: 1px; width: 24px; height: 24px; border-radius: 9999px; border: 2px solid #1A1A1A; opacity: 0; animation: cursorRing 2.6s ease-out infinite; }
+        @keyframes cursorTap { 0%, 55% { transform: translateY(0) scale(1); } 63% { transform: translateY(1px) scale(0.85); } 71%, 100% { transform: translateY(0) scale(1); } }
+        @keyframes cursorRing { 0%, 55% { opacity: 0; transform: scale(0.6); } 63% { opacity: 0.5; transform: scale(0.9); } 85% { opacity: 0; transform: scale(1.5); } 100% { opacity: 0; } }
+
+        /* About Us scrollytelling: each chapter sits dim/blurred/small until it crosses the vertical
+           center of the viewport (per the IntersectionObserver's -35%/-35% rootMargin), then comes into
+           cinematic focus. The sticky header's progress line fills based on scroll position within the
+           section, tracked in JS. */
+        .story-block {
+            opacity: 0.4;
+            transform: translateY(40px) scale(0.95);
+            filter: blur(4px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: left center;
+        }
+        .story-block.is-active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+        .scroll-progress-track {
+            position: absolute;
+            /* Centered in the gap before the next column, which is entirely that column's own
+               left padding (md:pl-16 / lg:pl-24) — half of it puts the line right in the middle. */
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 70%;
+            width: 4px;
+            /* Dashed like a road's center line rather than a solid rail. */
+            background-image: repeating-linear-gradient(to bottom, #e7e5e4 0, #e7e5e4 10px, transparent 10px, transparent 20px);
+        }
+        @media (min-width: 1024px) {
+            .scroll-progress-track { right: -3rem; }
+        }
+        .scroll-progress-fill {
+            width: 100%;
+            height: 0%;
+            background-image: repeating-linear-gradient(to bottom, #1c1917 0, #1c1917 10px, transparent 10px, transparent 20px);
+            /* Same duration/easing as .story-block's own fade-in, so the line grows in step with
+               the text instead of snapping ahead of it. */
+            transition: height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Underline-grows-from-nothing link style, used everywhere instead of pill buttons. */
+        .link-underline { position: relative; display: inline-block; }
+        .link-underline::after {
+            content: ''; position: absolute; left: 0; bottom: -2px; width: 100%; height: 1px;
+            background: currentColor; transform: scaleX(0); transform-origin: right;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .link-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+
+        /* Minimal FAQ / Terms accordion */
+        details > summary { list-style: none; cursor: pointer; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] .acc-plus { display: none; }
+        details[open] .acc-minus { display: block; }
+        .acc-minus { display: none; }
+
+        /* Automobiles/Tempo tab: whichever one is active has a dark fill — its own inactive-state
+           hover color must not apply once active, or the label goes invisible against its own background. */
+        #tab-car[aria-selected="true"]:hover,
+        #tab-bus[aria-selected="true"]:hover { color: #F9F9F8; }
+
+        /* Scroll reveal: a quiet fade-up, not a gimmick */
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 120ms; }
+        .reveal-delay-2 { transition-delay: 240ms; }
+        .reveal-delay-3 { transition-delay: 360ms; }
+
+        /* Nav links: a solid pill highlights whichever section is currently in view. */
+        #navbar .nav-link { padding: 0.5rem 0.9rem; border-radius: 9999px; transition: background-color 0.3s ease, color 0.3s ease; }
+        #navbar .nav-link.active { background-color: #1A1A1A; color: #F9F9F8; }
+        #navbar .nav-link.active:hover { color: #F9F9F8; }
+
+        /* Navbar contrast: the pill is cream by default, which nearly disappears over the site's own
+           light sections. When a dark section (Numbers, Testimonials) is scrolled behind it, invert to
+           a dark pill with light text instead — so it stays legible against either background rather
+           than only fixing one case at the other's expense. Toggled by scroll position in JS. */
+        #navbar { transition: background-color 0.3s ease, box-shadow 0.3s ease; }
+        #navbar.on-dark { background-color: rgba(26, 26, 26, 0.65); box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35); }
+        /* Two logo images (black wordmark / white wordmark), swapped instead of recolored — a
+           bitmap logo can't be repainted with a CSS color property the way the old text label was. */
+        .nav-logo-dark { display: none; }
+        #navbar.on-dark .nav-logo-light { display: none; }
+        #navbar.on-dark .nav-logo-dark { display: block; }
+        #navbar.on-dark .nav-link { color: #A8A29E; }
+        #navbar.on-dark .nav-link:hover { color: #F9F9F8; }
+        #navbar.on-dark .nav-link.active { background-color: #F9F9F8; color: #1A1A1A; }
+        #navbar.on-dark .nav-link.active:hover { color: #1A1A1A; }
+        #navbar.on-dark .nav-book-btn { background-color: #F9F9F8; color: #1A1A1A; }
+
+        /* Blur strength itself is graduated via a mask (strong at the very top, gone by the bottom of
+           the strip) — a flat, uniform blur across the whole strip would leave a visible hard edge at
+           its lower boundary instead of tapering off naturally. */
+        .nav-top-scrim {
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            mask-image: linear-gradient(to bottom, black 0%, black 35%, transparent 85%);
+            -webkit-mask-image: linear-gradient(to bottom, black 0%, black 35%, transparent 85%);
+        }
+
+        /* Footer scroll-car: same dark/light inversion as the navbar, using the same on-dark class —
+           the car is dark-on-light by default, which disappears against the dark Numbers/Testimonials
+           sections (and the pinned hero image) it also travels over. */
+        #scroll-car-container.on-dark .car-body,
+        #scroll-car-container.on-dark .car-wheel { color: #F9F9F8; }
+        #scroll-car-container.on-dark .car-window,
+        #scroll-car-container.on-dark .car-wheel-hub { fill: #1A1A1A; }
+        #scroll-car-container.on-dark .car-road-base { background-color: rgba(249, 249, 248, 0.15); }
+        #scroll-car-container.on-dark #scroll-road-fill { background-color: #F9F9F8; }
+
+        /* Mobile menu */
+        #mobile-menu { transition: opacity 0.4s ease, visibility 0.4s ease; }
+
+        /* Flush to the bottom (respecting the safe area on notched phones) on every breakpoint now
+           that there's no mobile contact strip for it to clear. */
+        #scroll-car-container { bottom: env(safe-area-inset-bottom); }
+
+        /* Accessible focus states, kept in the site's own ink color rather than a bright blue */
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
+            outline: 2px solid #1A1A1A;
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+            .reveal { opacity: 1 !important; transform: none !important; }
+            .reveal-img, .hero-fade-up { opacity: 1 !important; transform: none !important; }
+        }
+    </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AutoRental",
+      "name": "New Abhai Travels",
+      "description": "Cars, tempo travellers and buses for city drives, outstation trips, corporate events and group travel, arranged since 2000.",
+      "telephone": "+91-80902-02020",
+      "email": "newabhaitravels@yahoo.co.in",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "111-A/5, Ashok Nagar, Hotel Bliss Building, G.T. Road",
+        "addressLocality": "Kanpur",
+        "addressRegion": "Uttar Pradesh",
+        "addressCountry": "IN"
+      },
+      "foundingDate": "2000"
+    }
+    </script>
+    <!-- Tailwind CSS, pre-built. To regenerate after adding new classes, see README > "Editing the design". -->
+    <link rel="stylesheet" href="assets/css/tailwind.css">
+</head>
+<body class="font-body selection:bg-stone-900 selection:text-white">
+
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-stone-900 focus:text-stone-50 focus:px-4 focus:py-2 focus:rounded-xl focus:text-sm focus:font-medium">Skip to content</a>
+
+    <!-- Progressive blur behind the floating nav pill: content that scrolls past isn't fully hidden by
+         it (it's a pill, not a full-width bar, so text/images are visible in the margins around and
+         through the gap above it) — this softens that instead of a hard, unmasked edge. A blur (not a
+         color-matched gradient) so it looks right over any section's background, dark or light, without
+         needing to track what's currently behind it. Strongest right at the top, fading to nothing by
+         the pill's bottom edge; pointer-events-none so it never blocks taps on the nav or the page. -->
+    <div class="fixed top-0 inset-x-0 w-full h-28 z-40 pointer-events-none nav-top-scrim" aria-hidden="true"></div>
+
+    <nav class="fixed top-4 md:top-6 inset-x-4 md:inset-x-8 z-50 mx-auto max-w-4xl bg-stone-100/70 backdrop-blur-md backdrop-saturate-150 rounded-xl shadow-lg shadow-stone-900/10 flex items-center justify-between gap-3 pl-2 pr-2.5 py-2 md:pl-3 md:pr-3 md:py-2.5" id="navbar">
+        <a href="#" class="flex items-center gap-2 shrink-0">
+            <img src="assets/images/logo.png" alt="New Abhai Travels" class="nav-logo-light h-8 w-auto shrink-0">
+            <img src="assets/images/logo-white.png" alt="New Abhai Travels" class="nav-logo-dark h-8 w-auto shrink-0">
+        </a>
+
+        <div class="hidden md:flex items-center gap-1 text-sm font-medium text-stone-500 mx-auto">
+            <a href="#fleet" class="nav-link hover:text-stone-900 transition-colors whitespace-nowrap">Vehicles</a>
+            <a href="#steps" class="nav-link hover:text-stone-900 transition-colors whitespace-nowrap">Steps to Book</a>
+            <a href="#about" class="nav-link hover:text-stone-900 transition-colors whitespace-nowrap">About</a>
+            <a href="#testimonials" class="nav-link hover:text-stone-900 transition-colors whitespace-nowrap">Testimonials</a>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+            <a href="tel:+918090202020" aria-label="Call us" class="hidden sm:flex w-9 h-9 rounded-full bg-white items-center justify-center text-stone-900 hover:bg-stone-200 transition-colors shrink-0">
+                <i class="ph ph-phone"></i>
+            </a>
+            <a href="#book" class="nav-book-btn hidden md:inline-flex items-center px-5 py-2.5 rounded-xl bg-stone-900 text-stone-50 text-sm font-medium hover:opacity-85 transition-opacity whitespace-nowrap">Book Now</a>
+            <button class="md:hidden w-9 h-9 rounded-full bg-white flex items-center justify-center text-stone-900 shrink-0" onclick="toggleMobileMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+                <i class="ph ph-list"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile menu: solid overlay (not blend-difference) so it stays legible regardless of what's behind it. -->
+    <div id="mobile-menu" class="fixed inset-0 z-[60] bg-stone-900 text-stone-50 flex flex-col items-center justify-center gap-10 opacity-0 invisible pointer-events-none">
+        <button class="absolute top-8 right-8 text-sm font-medium tracking-widest uppercase" onclick="toggleMobileMenu()" aria-label="Close menu">Close</button>
+        <a href="#fleet" class="font-display text-3xl" onclick="toggleMobileMenu()">Vehicles</a>
+        <a href="#steps" class="font-display text-3xl" onclick="toggleMobileMenu()">Steps to Book</a>
+        <a href="#about" class="font-display text-3xl" onclick="toggleMobileMenu()">About</a>
+        <a href="#testimonials" class="font-display text-3xl" onclick="toggleMobileMenu()">Testimonials</a>
+        <a href="#feedback" class="font-display text-3xl" onclick="toggleMobileMenu()">Feedback</a>
+        <a href="#book" class="font-display text-3xl" onclick="toggleMobileMenu()">Book Now</a>
+        <div class="flex gap-8 mt-6 text-sm font-medium tracking-widest uppercase opacity-70">
+            <a href="tel:+918090202020" onclick="toggleMobileMenu()">Call</a>
+            <a href="https://wa.me/918090202020" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+    </div>
+
+    <!-- Pinned hero backdrop: fixed to the viewport, not part of the hero section's own box, so it stays
+         put while every section afterwards scrolls up and over it — content drifting over a stationary
+         backdrop, like clouds passing in front of a fixed skyline. Living outside <main>, as a sibling,
+         keeps it clear of any ancestor transform (the mobile rotation included) that would otherwise
+         turn its own `position: fixed` into `absolute`. No gradient here — the fade lives on the Fleet
+         section's own leading edge instead (see below), so it travels with the scroll rather than
+         sitting static while the boundary it's supposed to soften moves past it. -->
+    <div class="fixed z-[-2] overflow-hidden hero-img-wrap" aria-hidden="true">
+        <img src="assets/images/hero.jpg" alt="" class="w-full h-full object-cover object-center editorial-img reveal-img" width="2400" height="1600">
+    </div>
+
+    <main id="main">
+
+        <!-- Hero: text sits in normal flow, reserving a full viewport of height above the Fleet section,
+             with the pinned backdrop above showing through wherever nothing opaque yet covers it. Its own
+             gradient (scrolls away with this section, unlike the image) keeps the text legible on first
+             view before anything has scrolled.
+             100dvh (not 100vh) so mobile browsers size this to the actually-visible viewport — 100vh
+             includes the area behind the collapsible address bar, which pushed the bottom-anchored
+             CTA down into the same screen position as the fixed WhatsApp button and scroll-car.
+             min-height, not a hard height: whenever the content fits (the normal case, at any
+             reasonable viewport), this behaves exactly like height:100dvh always did. It's a safety
+             net for the rare case the fluid heading/spacing above still doesn't leave quite enough
+             room — content grows the section a little taller and the page scrolls slightly further
+             to show the rest, rather than ever overlapping the fixed navbar. -->
+        <section id="hero" class="relative flex flex-col justify-end" style="min-height: 100dvh;">
+            <div class="absolute inset-0 z-[-1] hero-gradient" style="background: linear-gradient(to bottom, transparent 30%, rgba(240, 239, 234, 0.85) 75%, rgba(240, 239, 234, 1) 100%);"></div>
+
+            <div id="hero-content" class="relative z-10 px-5 md:px-12 pb-20 md:pb-16 w-full text-center md:text-left">
+                <p class="hero-fade-up hero-fade-up-d1 font-display tracking-widest uppercase text-sm mb-6 md:mb-10 text-stone-500">Est. 2000</p>
+                <h1 class="hero-fade-up hero-fade-up-d2 font-body font-extrabold text-fluid-hero-wide text-stone-900 tracking-tighter">
+                    <span class="block whitespace-nowrap">Cars On Rent.</span>
+                    <span class="block">Anytime.</span>
+                </h1>
+                <div class="hero-fade-up hero-fade-up-d3 mt-8 md:mt-16 flex flex-col items-center lg:flex-row lg:items-end justify-center lg:justify-between gap-8">
+                    <!-- The subline and the trust stats sit side by side on one line on desktop (the
+                         stats used to be a separate strip below, with its own top border, feeling
+                         disconnected from the rest of the copy) — stats to the right of the subline
+                         text, not underneath it — with the Book Now button on the far side of the row.
+                         Still stacks below lg: at md (768–1023) there isn't width left for the subline
+                         once the stats and Book Now also need room in the same row — it was wrapping to
+                         one word per line — so this row only goes side-by-side once there's actually
+                         space for it. -->
+                    <div class="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
+                        <p class="font-normal text-lg md:text-xl max-w-md leading-relaxed text-stone-700">
+                            Cars, tempo travellers and buses, considered rentals for every journey, arranged since 2000.
+                        </p>
+                        <div class="flex items-center justify-center lg:justify-start gap-3 md:gap-6 max-w-[260px] lg:max-w-none">
+                            <div>
+                                <p class="font-display text-2xl md:text-3xl font-bold text-stone-900 leading-none tabular-nums">25+</p>
+                                <p class="text-[9px] md:text-[10px] tracking-widest uppercase text-stone-500 mt-1">Years</p>
+                            </div>
+                            <div class="w-px h-8 bg-stone-900/15" aria-hidden="true"></div>
+                            <div>
+                                <p class="font-display text-2xl md:text-3xl font-bold text-stone-900 leading-none tabular-nums">24/7</p>
+                                <p class="text-[9px] md:text-[10px] tracking-widest uppercase text-stone-500 mt-1">Support</p>
+                            </div>
+                            <div class="w-px h-8 bg-stone-900/15 hidden lg:block" aria-hidden="true"></div>
+                            <div class="hidden lg:block">
+                                <p class="font-display text-3xl font-bold text-stone-900 leading-none">AC</p>
+                                <p class="text-[10px] tracking-widest uppercase text-stone-500 mt-1">&amp; Non-AC</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- lg:mr-20: the floating WhatsApp button is fixed at bottom-right (right-6, 56px
+                         wide) and this row shares that same bottom-right corner once it goes side-by-side
+                         at lg (hero-content has no max-width, so the button's edge always lands a fixed
+                         distance from the viewport edge regardless of screen width) — without this
+                         clearance they overlap at every desktop width, not just one breakpoint. -->
+                    <a href="#fleet" class="group inline-flex items-center gap-3 bg-stone-900 text-stone-50 text-sm font-semibold uppercase tracking-widest px-6 py-3.5 rounded-xl hover:opacity-85 transition-opacity w-fit shrink-0 lg:mr-20">
+                        Book Now <i class="ph ph-arrow-down group-hover:translate-y-2 transition-transform duration-500"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 01. Fleet: same browsing journey as before this restyle — category toggle, type/capacity/AC
+             filters, a swipable row on mobile that becomes a full "see everything at once" grid from
+             md up, and clicking a card opens the full detail modal before anyone commits to enquiring. -->
+        <section id="fleet" class="bg-stone-100 py-24 md:py-32 px-6 md:px-12">
+            <!-- No fade of its own here — the hero's own gradient (which reaches full opacity by its
+                 own bottom edge) already completes the transition from pinned image to solid site
+                 background. A second fade at this section's top would just double up and flicker. -->
+            <div class="max-w-7xl mx-auto">
+
+                <div class="mb-10 reveal">
+                    <h2 class="font-display text-xs tracking-widest uppercase text-stone-500 mb-4">( 01. Fleet )</h2>
+                    <h3 class="font-display font-bold text-4xl md:text-6xl text-stone-900 leading-tight">Book your vehicle.</h3>
+                </div>
+
+                <!-- Cars / Buses toggle -->
+                <!-- items-stretch (the flex default), not items-center: "Tempo & Coaches" wraps to two
+                     lines on narrow screens, making this row taller than a single-line label's own
+                     height — stretch makes both buttons fill that full height so neither leaves a gap
+                     above/below, instead of the taller one setting the row height and the shorter one
+                     just floating centered inside it. -->
+                <div class="flex gap-1 border border-stone-300 w-fit mb-10 reveal rounded-xl overflow-hidden bg-white" role="tablist" aria-label="Vehicle category">
+                    <button id="tab-car" role="tab" aria-selected="true" onclick="setCategory('car')" class="flex items-center gap-2 min-h-[44px] px-6 py-3 text-sm font-semibold tracking-wide uppercase bg-stone-900 text-stone-50 hover:text-stone-900 transition-colors"><i class="ph-fill ph-car"></i> Automobiles</button>
+                    <button id="tab-bus" role="tab" aria-selected="false" onclick="setCategory('bus')" class="flex items-center gap-2 min-h-[44px] px-6 py-3 text-sm font-semibold tracking-wide uppercase text-stone-500 hover:text-stone-900 transition-colors"><i class="ph-fill ph-bus"></i> Tempo &amp; Coaches</button>
+                </div>
+
+                <!-- Header row: title, type filters, capacity/AC (desktop only) -->
+                <div class="flex flex-col lg:flex-row lg:items-end gap-6 mb-10 reveal reveal-delay-1">
+                    <h2 id="fleet-heading" class="font-display text-xs tracking-widest uppercase text-stone-500 shrink-0">Choose Your Automobile</h2>
+
+                    <div id="filter-container" class="hidden md:flex flex-wrap items-center gap-3 lg:mx-auto"></div>
+
+                    <div class="hidden md:flex items-center gap-3 shrink-0">
+                        <label for="capacity-select" class="sr-only">Seating capacity</label>
+                        <select id="capacity-select" onchange="setCapacity(this.value)" class="rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm font-medium text-stone-700 cursor-pointer hover:border-stone-900 transition-colors">
+                            <option value="all">Any Capacity</option>
+                        </select>
+
+                        <label for="ac-select" class="sr-only">AC / Non-AC</label>
+                        <select id="ac-select" onchange="setAc(this.value)" class="rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm font-medium text-stone-700 cursor-pointer hover:border-stone-900 transition-colors">
+                            <option value="all">AC / Non-AC</option>
+                            <option value="ac">AC</option>
+                            <option value="nonac">Non-AC</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Mobile filter trigger -->
+                <div class="md:hidden mb-8 reveal reveal-delay-1">
+                    <button onclick="openFilterSheet()" class="w-full flex items-center justify-center gap-3 py-4 border border-stone-300 bg-white rounded-xl text-sm font-semibold tracking-wide uppercase text-stone-900 shadow-sm">
+                        <i class="ph ph-sliders-horizontal"></i> Filters <span id="filter-count-badge" class="hidden w-5 h-5 rounded-full bg-stone-900 text-stone-50 text-[10px] items-center justify-center"></span>
+                    </button>
+                </div>
+
+                <p id="empty-state" class="hidden text-stone-500 font-light pb-6">No listed vehicle matches that filter &mdash; but tell us what you need below and we'll see what we can arrange.</p>
+
+                <div class="relative">
+                    <div id="fleet-grid" class="fleet-grid" aria-live="polite"></div>
+                    <!-- Mobile only: an animated hand demonstrates the swipe rather than just describing
+                         it in text — dismissed the first time someone actually scrolls or touches the row. -->
+                    <div id="swipe-hint-hand" class="md:hidden absolute top-16 left-1/2 -translate-x-1/2 swipe-hand-anim pointer-events-none text-3xl" aria-hidden="true">👆</div>
+                </div>
+                <!-- Mobile only: a custom, always-visible scroll indicator for the card row above — the
+                     row's own native scrollbar is hidden (see .fleet-grid) so this is the only one shown,
+                     rather than sitting duplicated on top of it on browsers that do render a native one.
+                     This stays visible permanently, unlike the one-time swipe hint below, whose thumb
+                     width reflects how much of the row is visible and slides to track real scroll
+                     position. -->
+                <div class="md:hidden relative h-2 bg-stone-200 rounded-full overflow-hidden mt-4" aria-hidden="true">
+                    <div id="fleet-scroll-thumb" class="absolute inset-y-0 left-0 h-full bg-stone-900 rounded-full" style="width: 100%;"></div>
+                </div>
+
+                <!-- Mobile only: hints at the swipe gesture the row above uses. -->
+                <p id="swipe-hint-label" class="md:hidden flex items-center justify-center gap-2 mt-4 text-xs tracking-widest uppercase text-stone-500" aria-hidden="true">
+                    Swipe to see more <i class="ph ph-arrow-right swipe-hint-arrow"></i>
+                </p>
+            </div>
+        </section>
+
+        <!-- Mobile Filter Bottom Sheet -->
+        <div id="filter-sheet" class="fixed inset-0 z-[70] hidden">
+            <div class="absolute inset-0 bg-stone-900/40 backdrop-blur-sm" onclick="closeFilterSheet()"></div>
+            <div id="filter-sheet-panel" class="absolute bottom-0 left-0 right-0 bg-stone-50 p-6 pb-8 max-h-[85vh] overflow-y-auto transform translate-y-full transition-transform duration-300 border-t border-stone-300 rounded-t-xl">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="font-display text-xl">Filters</h3>
+                    <button onclick="closeFilterSheet()" aria-label="Close filters" class="min-h-[44px] px-2 -mx-2 text-sm tracking-widest uppercase">Close</button>
+                </div>
+
+                <p class="text-xs tracking-widest uppercase text-stone-500 mb-3">Vehicle Type</p>
+                <div id="filter-container-mobile" class="flex flex-wrap gap-3 mb-8"></div>
+
+                <p class="text-xs tracking-widest uppercase text-stone-500 mb-3">Seating Capacity</p>
+                <div id="capacity-container-mobile" class="flex flex-wrap gap-3 mb-8"></div>
+
+                <p class="text-xs tracking-widest uppercase text-stone-500 mb-3">AC / Non-AC</p>
+                <div class="flex gap-3 mb-10">
+                    <button onclick="setAc('all')" data-ac-btn-m="all" class="ac-btn-m flex-1 py-3 rounded-xl text-sm tracking-widest uppercase border border-stone-300">All</button>
+                    <button onclick="setAc('ac')" data-ac-btn-m="ac" class="ac-btn-m flex-1 py-3 rounded-xl text-sm tracking-widest uppercase border border-stone-300">AC</button>
+                    <button onclick="setAc('nonac')" data-ac-btn-m="nonac" class="ac-btn-m flex-1 py-3 rounded-xl text-sm tracking-widest uppercase border border-stone-300">Non-AC</button>
+                </div>
+
+                <button onclick="closeFilterSheet()" class="w-full py-4 bg-stone-900 text-stone-50 rounded-xl text-sm tracking-widest uppercase">Show Results</button>
+            </div>
+        </div>
+
+        <!-- 02. Steps to Book -->
+        <section id="steps" class="bg-stone-50 py-24 md:py-32 px-6 md:px-12 border-t border-stone-200">
+            <div class="max-w-7xl mx-auto">
+            <div class="reveal mb-16">
+                <h2 class="font-display text-xs tracking-widest uppercase text-stone-500 mb-8">( 02. Steps to Book )</h2>
+                <h3 class="font-display font-bold text-3xl md:text-4xl text-stone-900 leading-tight tracking-tight">Three steps, no online payment.</h3>
+            </div>
+
+            <!-- Numbered circles use font-body (Inter), not font-display (Syne) — Syne's stylised zero
+                 reads too much like the letter O to work as a plain step number. Cards genuinely stack
+                 on scroll via position:sticky — each new card scrolls up from below and settles over the
+                 last one, which stays put underneath (a pure-CSS effect, no fixed-position/JS trickery
+                 needed). Each card pins a bit lower than the one before it (top-[14vh]/19vh/24vh) so a
+                 sliver of every earlier card stays visible above the one on top, reading as an actual
+                 stacked deck rather than the new card just erasing the last. A small animated cursor
+                 "clicks" the relevant spot in each mockup so it reads as something happening, not just a
+                 static screenshot.
+
+                 The trailing spacer after card 3 (below) isn't decorative spacing — with three sticky
+                 siblings sharing one flow parent, the browser releases an EARLIER card from its pinned
+                 position based on how close the whole shared parent's bottom edge is, not just that
+                 card's own next sibling. Without the spacer, cards 1 and 2 got released early (in
+                 lockstep, oddly) right as card 3 was approaching its own pin point, which cut card 3's
+                 peek-of-card-2 short and made the last handoff visibly bigger/uneven than the first.
+                 Giving the shared parent more room at the very end (after the last card, where it doesn't
+                 affect anything else) delays that shared release point past card 3's peek, so both
+                 handoffs end up with the same sliver. -->
+            <div class="max-w-4xl mx-auto">
+                <!-- Step 1: paired with a mini fleet card, since that's literally what "choosing" looks like. -->
+                <div class="sticky top-[14vh] z-10 mb-24 md:mb-32 min-h-[540px] flex items-center md:min-h-[340px] reveal reveal-delay-1 bg-stone-100 border-4 border-stone-50 rounded-xl p-6 md:p-8 shadow-lg">
+                    <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-8 items-center w-full">
+                        <span class="w-12 h-12 sm:w-14 sm:h-14 mx-auto sm:mx-0 shrink-0 rounded-full bg-stone-900 text-stone-50 flex items-center justify-center font-body font-bold text-xl">1</span>
+                        <div class="text-center sm:text-left">
+                            <h4 class="font-display text-xl mb-2">Choose Your Ride</h4>
+                            <p class="text-stone-600 font-light leading-relaxed">Browse the fleet, pick what fits.</p>
+                        </div>
+                        <div class="relative w-full sm:w-[190px] mx-auto sm:mx-0 shrink-0">
+                            <div class="bg-white border border-stone-200 rounded-lg overflow-hidden shadow-lg">
+                                <div class="relative aspect-[4/3] bg-stone-200 overflow-hidden">
+                                    <img src="assets/images/fleet/innova-crysta/1.jpg" alt="Sample fleet card for the Toyota Innova Crysta" loading="lazy" decoding="async" width="480" height="360" class="w-full h-full object-cover editorial-img">
+                                    <span class="absolute top-2 left-2 bg-amber-400 text-stone-900 text-[9px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-md">★ Popular</span>
+                                </div>
+                                <div class="p-3">
+                                    <p class="font-display text-xs font-semibold text-stone-900 mb-2 leading-tight">Innova Crysta</p>
+                                    <div class="flex items-center gap-1 flex-wrap mb-2.5">
+                                        <span class="bg-stone-100 text-stone-700 text-[8px] font-medium px-1.5 py-0.5 rounded-md">MPV</span>
+                                        <span class="bg-stone-100 text-stone-700 text-[8px] font-medium px-1.5 py-0.5 rounded-md">7 Seats</span>
+                                    </div>
+                                    <span class="inline-flex items-center gap-1 bg-stone-900 text-white text-[8px] font-semibold uppercase tracking-wide px-2 py-1 rounded-md">View Details</span>
+                                </div>
+                            </div>
+                            <div class="mock-cursor" style="top: 87%; left: 78%;" aria-hidden="true">
+                                <span class="mock-cursor-ring"></span>
+                                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 2 L4 19 L8 15.5 L11 22 L14.2 20.5 L11.2 14 L18 14 Z" fill="#1A1A1A" stroke="#F9F9F8" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: paired with a mini WhatsApp-style bubble, since that's how most enquiries arrive. -->
+                <div class="sticky top-[19vh] z-20 mb-24 md:mb-32 min-h-[540px] flex items-center md:min-h-[340px] reveal reveal-delay-2 bg-stone-100 border-4 border-stone-50 rounded-xl p-6 md:p-8 shadow-xl">
+                    <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-8 items-center w-full">
+                        <span class="w-12 h-12 sm:w-14 sm:h-14 mx-auto sm:mx-0 shrink-0 rounded-full bg-stone-900 text-stone-50 flex items-center justify-center font-body font-bold text-xl">2</span>
+                        <div class="text-center sm:text-left">
+                            <h4 class="font-display text-xl mb-2">Send a Quick Enquiry</h4>
+                            <p class="text-stone-600 font-light leading-relaxed">We confirm your rate on WhatsApp.</p>
+                        </div>
+                        <div class="relative w-full sm:w-[190px] mx-auto sm:mx-0 shrink-0">
+                            <div class="bg-[#e5ded4] rounded-lg p-3 shadow-lg">
+                                <div class="bg-[#dcf8c6] rounded-md rounded-tr-sm px-2.5 py-2 shadow-sm">
+                                    <p class="text-[9px] text-stone-800 leading-snug">Hi! Interested in the Innova Crysta this weekend. Is it available?</p>
+                                    <p class="text-[8px] text-stone-500 text-right mt-1 flex items-center justify-end gap-1">10:42 AM <i class="ph-fill ph-checks text-[10px] text-sky-500"></i></p>
+                                </div>
+                            </div>
+                            <div class="mock-cursor" style="top: 78%; left: 82%;" aria-hidden="true">
+                                <span class="mock-cursor-ring"></span>
+                                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 2 L4 19 L8 15.5 L11 22 L14.2 20.5 L11.2 14 L18 14 Z" fill="#1A1A1A" stroke="#F9F9F8" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: paired with a mini confirmation card, so the payoff is visible too. -->
+                <div class="sticky top-[24vh] z-30 min-h-[540px] flex items-center md:min-h-[340px] reveal reveal-delay-3 bg-stone-100 border-4 border-stone-50 rounded-xl p-6 md:p-8 shadow-2xl">
+                    <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto] gap-6 sm:gap-8 items-center w-full">
+                        <span class="w-12 h-12 sm:w-14 sm:h-14 mx-auto sm:mx-0 shrink-0 rounded-full bg-stone-900 text-stone-50 flex items-center justify-center font-body font-bold text-xl">3</span>
+                        <div class="text-center sm:text-left">
+                            <h4 class="font-display text-xl mb-2">Hit the Road</h4>
+                            <p class="text-stone-600 font-light leading-relaxed">Your ride arrives, right on time.</p>
+                        </div>
+                        <div class="relative w-full sm:w-[190px] mx-auto sm:mx-0 shrink-0">
+                            <div class="bg-white border border-stone-200 rounded-lg p-4 shadow-lg text-center">
+                                <span class="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto mb-2"><i class="ph-fill ph-check-bold"></i></span>
+                                <p class="text-xs font-semibold text-stone-900 mb-1">Booking Confirmed</p>
+                                <p class="text-[9px] text-stone-500">Driver arriving 9:00 AM</p>
+                            </div>
+                            <div class="mock-cursor" style="top: 30%; left: 52%;" aria-hidden="true">
+                                <span class="mock-cursor-ring"></span>
+                                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 2 L4 19 L8 15.5 L11 22 L14.2 20.5 L11.2 14 L18 14 Z" fill="#1A1A1A" stroke="#F9F9F8" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fixes the stacking symmetry, not decorative — see the comment above the card list. -->
+                <div class="h-48 md:h-64" aria-hidden="true"></div>
+            </div>
+            </div>
+        </section>
+
+        <!-- 03. About Us: scrollytelling narrative — a sticky header that tracks progress through three
+             chapters, each one coming into cinematic focus (from blurred/faded) as it crosses the center
+             of the viewport, ported over as a full replacement of the old list-based About Us. -->
+        <section id="about" class="relative bg-stone-50 text-stone-900 z-10 border-t border-stone-300/50">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row relative">
+
+                <!-- Left Column: Sticky Editorial Header -->
+                <div class="md:w-5/12 sticky top-0 md:h-screen flex flex-col justify-start md:justify-center pt-24 md:pt-0 z-20 bg-stone-50 md:bg-transparent pb-8 md:pb-0 shadow-[0_20px_20px_-20px_rgba(249,249,248,1)] md:shadow-none">
+                    <div class="relative md:pl-10 h-full flex flex-col justify-center">
+
+                        <!-- Dynamic Scroll Progress Line (Desktop Only) -->
+                        <div class="hidden md:block scroll-progress-track">
+                            <div id="story-progress" class="scroll-progress-fill"></div>
+                        </div>
+
+                        <span class="text-[9px] md:text-xs uppercase tracking-[0.4em] text-stone-500 font-semibold mb-6 block">( 03. Our Story )</span>
+                        <!-- Two lines on mobile ("Moving people" / "since 2000.") instead of four, so
+                             the sticky header takes up less vertical room and leaves more space for the
+                             story text beside it — desktop keeps its original four-line break. -->
+                        <h2 class="font-body font-black text-5xl md:text-7xl lg:text-8xl tracking-tighter text-stone-900 leading-[0.9]">
+                            Moving <br class="hidden md:block">people<br>since <br class="hidden md:block">2000.
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Right Column: Scrolling Narrative -->
+                <div class="md:w-7/12 md:pl-16 lg:pl-24 pt-8 md:pt-[30vh] pb-[16vh] md:pb-[25vh] flex flex-col gap-16 md:gap-[15vh]">
+
+                    <!-- Chapter 1 -->
+                    <div class="story-block">
+                        <div class="text-3xl md:text-5xl font-black text-stone-300 mb-4 tracking-tighter">01</div>
+                        <h3 class="text-xl md:text-2xl font-bold tracking-tight text-stone-900 mb-4">The Foundation</h3>
+                        <p class="text-stone-600 font-light text-base md:text-lg leading-relaxed max-w-[62ch]">
+                            It began at the turn of the millennium with a single premise: road travel shouldn't just be about getting from point A to B. It should be reliable, seamless, and deeply considered. We set out to redefine the standard of vehicle rentals, treating every trip with the gravity it deserves.
+                        </p>
+                    </div>
+
+                    <!-- Chapter 2 -->
+                    <div class="story-block">
+                        <div class="text-3xl md:text-5xl font-black text-stone-300 mb-4 tracking-tighter">02</div>
+                        <h3 class="text-xl md:text-2xl font-bold tracking-tight text-stone-900 mb-4">Scaling the Fleet</h3>
+                        <p class="text-stone-600 font-light text-base md:text-lg leading-relaxed max-w-[62ch]">
+                            As demands grew, so did our ambitions. We expanded far beyond standard cars, meticulously curating a diverse fleet of tempo travellers and luxury buses. Whether coordinating a corporate retreat or arranging a family pilgrimage, we ensured the exact right vehicle was always ready.
+                        </p>
+                    </div>
+
+                    <!-- Chapter 3 -->
+                    <div class="story-block">
+                        <div class="text-3xl md:text-5xl font-black text-stone-300 mb-4 tracking-tighter">03</div>
+                        <h3 class="text-xl md:text-2xl font-bold tracking-tight text-stone-900 mb-4">The Standard Today</h3>
+                        <p class="text-stone-600 font-light text-base md:text-lg leading-relaxed max-w-[62ch]">
+                            Over two decades later, the name New Abhai stands as a benchmark for trust. With 24/7 dedicated support, rigorous maintenance protocols, and chauffeurs who master the roads, we don't just rent vehicles: we guarantee absolute peace of mind on every journey.
+                        </p>
+                    </div>
+
+                    <!-- Chapter 4: Office photos, from assets/images/office/ (4 photos). Each is a different native
+                         aspect ratio, but the shared aspect-[4/5] + object-cover keeps the grid
+                         locked to one uniform shape regardless of source dimensions. 2 columns on
+                         mobile (a clean 2x2) widening to a single row of 4 from md up. -->
+                    <div class="story-block">
+                        <div class="text-3xl md:text-5xl font-black text-stone-300 mb-4 tracking-tighter">04</div>
+                        <h3 class="text-xl md:text-2xl font-bold tracking-tight text-stone-900 mb-4">Where We Operate From</h3>
+                        <p class="text-stone-600 font-light text-base md:text-lg leading-relaxed max-w-[62ch] mb-2">
+                            Every booking is coordinated from our own office, not a call centre script. Drop by, or just picture the team behind the phone.
+                        </p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=111-A%2F5+Ashok+Nagar+Hotel+Bliss+Building+G.T+Road+Kanpur" target="_blank" rel="noopener" class="inline-flex items-start gap-2 mb-6 text-sm text-stone-500 hover:text-stone-900 transition-colors">
+                            <i class="ph ph-map-pin text-base mt-0.5"></i>
+                            <span>111-A/5, Ashok Nagar, Hotel Bliss Building, G.T. Road, Kanpur</span>
+                        </a>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <img src="assets/images/office/1.jpg" alt="New Abhai Travels office, view 1" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
+                            <img src="assets/images/office/2.jpg" alt="New Abhai Travels office, view 2" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
+                            <img src="assets/images/office/3.jpg" alt="New Abhai Travels office, view 3" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
+                            <img src="assets/images/office/4.jpg" alt="New Abhai Travels office, view 4" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 04. Testimonials & FAQ -->
+        <section id="testimonials" class="dark-section py-32 px-6 md:px-12 bg-stone-900 text-stone-50">
+            <div class="max-w-5xl mx-auto text-center">
+                <h2 class="font-display text-xs tracking-widest uppercase text-stone-400 mb-16 reveal">( 04. Testimonials &amp; FAQ )</h2>
+
+                <!-- Video testimonials: tap a thumbnail to play the customer's own clip in the modal below.
+                     Two real reviews are available so far (assets/videos/review-1.mp4, review-2.mp4) — add a third
+                     `<button>` here plus a matching entry in testimonialVideos when one arrives. No
+                     fabricated customer names are attached to real footage; swap in real names/vehicle
+                     labels once known. -->
+                <div class="grid grid-cols-2 gap-3 md:gap-6 max-w-md mx-auto">
+                    <button type="button" onclick="openTestimonialVideo('review1')" aria-label="Play customer video review 1" class="group relative aspect-[9/16] rounded-lg overflow-hidden bg-stone-800 text-left reveal reveal-delay-1">
+                        <img src="assets/videos/review-1-poster.jpg" alt="" loading="lazy" decoding="async" width="478" height="850" class="w-full h-full object-cover editorial-img opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500">
+                        <span class="absolute inset-0 flex items-center justify-center">
+                            <span class="w-11 h-11 md:w-14 md:h-14 rounded-full bg-stone-50 text-stone-900 flex items-center justify-center text-lg md:text-2xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-play"></i></span>
+                        </span>
+                        <span class="absolute bottom-0 left-0 right-0 p-2.5 md:p-4 bg-gradient-to-t from-stone-900 via-stone-900/70 to-transparent">
+                            <span class="block text-xs md:text-sm font-medium text-stone-50">Customer Review</span>
+                        </span>
+                    </button>
+                    <button type="button" onclick="openTestimonialVideo('review2')" aria-label="Play customer video review 2" class="group relative aspect-[9/16] rounded-lg overflow-hidden bg-stone-800 text-left reveal reveal-delay-2">
+                        <img src="assets/videos/review-2-poster.jpg" alt="" loading="lazy" decoding="async" width="464" height="832" class="w-full h-full object-cover editorial-img opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500">
+                        <span class="absolute inset-0 flex items-center justify-center">
+                            <span class="w-11 h-11 md:w-14 md:h-14 rounded-full bg-stone-50 text-stone-900 flex items-center justify-center text-lg md:text-2xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-play"></i></span>
+                        </span>
+                        <span class="absolute bottom-0 left-0 right-0 p-2.5 md:p-4 bg-gradient-to-t from-stone-900 via-stone-900/70 to-transparent">
+                            <span class="block text-xs md:text-sm font-medium text-stone-50">Customer Review</span>
+                        </span>
+                    </button>
+                </div>
+                <p class="text-xs text-stone-500 mt-8 reveal">Tap a video to hear it from our customers.</p>
+
+                <!-- Written reviews. minmax(min(100%, 260px), 1fr) lets the cards drop to one column on
+                     narrow screens (and at 400% zoom) without overflowing, no breakpoint needed. -->
+                <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-6 max-w-3xl mx-auto mt-20 text-left">
+                    <figure class="border border-stone-50/15 rounded-xl p-6 md:p-8 reveal reveal-delay-1">
+                        <div class="flex gap-1 text-stone-300 mb-4" role="img" aria-label="Rated 5 out of 5">
+                            <i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i>
+                        </div>
+                        <blockquote class="text-stone-200 font-light leading-relaxed mb-6">“Very good service. The car was clean, the driver was polite and he reached on time. Booking on WhatsApp was quick and easy. Highly recommended!”</blockquote>
+                        <figcaption class="font-display text-sm tracking-widest uppercase text-stone-400">Rahul Malhotra</figcaption>
+                    </figure>
+                    <figure class="border border-stone-50/15 rounded-xl p-6 md:p-8 reveal reveal-delay-2">
+                        <div class="flex gap-1 text-stone-300 mb-4" role="img" aria-label="Rated 5 out of 5">
+                            <i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i>
+                        </div>
+                        <blockquote class="text-stone-200 font-light leading-relaxed mb-6">“We took a Tempo Traveller for a family trip and everything went smoothly. Comfortable vehicle, experienced driver and fair rates. We will book again.”</blockquote>
+                        <figcaption class="font-display text-sm tracking-widest uppercase text-stone-400">Arjun Mehra</figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <div class="max-w-3xl mx-auto mt-32">
+                <h3 class="font-display text-xs tracking-widest uppercase text-stone-400 mb-12 text-center reveal">Common Inquiries</h3>
+                <div class="space-y-6">
+                    <details class="group border-b border-stone-50/15 pb-6 reveal">
+                        <summary class="font-display text-xl flex justify-between items-center gap-4 transition-colors hover:text-stone-300">
+                            Why should you take a car or bus from New Abhai Travels?
+                            <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
+                            <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
+                        </summary>
+                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Because we provide comfortable, clean, reliable vehicles with experienced drivers, making your local or outstation journey safe, convenient, and hassle-free.</p>
+                    </details>
+                    <details class="group border-b border-stone-50/15 pb-6 reveal">
+                        <summary class="font-display text-xl flex justify-between items-center gap-4 transition-colors hover:text-stone-300">
+                            What is required to rent a vehicle?
+                            <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
+                            <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
+                        </summary>
+                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">A valid ID proof, customer name and mobile number, advance payment as per the rental terms, and a signed rental agreement are required. No driving licence or security deposit is required.</p>
+                    </details>
+                    <details class="group border-b border-stone-50/15 pb-6 reveal reveal-delay-1">
+                        <summary class="font-display text-xl flex justify-between items-center gap-4 transition-colors hover:text-stone-300">
+                            Do vehicles come with a driver?
+                            <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
+                            <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
+                        </summary>
+                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Yes — self-drive isn't available. Every vehicle, from cars to buses, comes with a professional driver as part of the service.</p>
+                    </details>
+                    <details class="group border-b border-stone-50/15 pb-6 reveal reveal-delay-2">
+                        <summary class="font-display text-xl flex justify-between items-center gap-4 transition-colors hover:text-stone-300">
+                            What's the fuel policy?
+                            <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
+                            <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
+                        </summary>
+                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Fuel is included in the agreed rental fare, and the vehicle is handed over with a reasonable fuel level for the booked trip — nothing to arrange yourself. Extra kilometres, detours, or trips beyond the agreed package, along with tolls, parking, and other statutory charges, are billed separately as per the confirmed terms.</p>
+                    </details>
+                    <details class="group border-b border-stone-50/15 pb-6 reveal reveal-delay-3">
+                        <summary class="font-display text-xl flex justify-between items-center gap-4 transition-colors hover:text-stone-300">
+                            Can I cancel or reschedule an enquiry?
+                            <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
+                            <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
+                        </summary>
+                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Since nothing is paid online, there's nothing to formally cancel. Just message or call us to change plans and we'll adjust or reschedule.</p>
+                    </details>
+                    <details class="group border-b border-stone-50/15 pb-6 reveal">
+                        <summary class="font-display text-xl flex justify-between items-center gap-4 transition-colors hover:text-stone-300">
+                            How is the rate confirmed if there's no online checkout?
+                            <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
+                            <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
+                        </summary>
+                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Rates depend on the vehicle, dates, distance and any add-ons. Enquire for the vehicle you want and we'll confirm the exact total over WhatsApp or a call before you commit.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05. Feedback: a dedicated section for review collection, separate from the booking form. -->
+        <section id="feedback" class="py-24 md:py-32 px-6 md:px-12 bg-stone-100 border-t border-stone-200">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="font-display text-xs tracking-widest uppercase text-stone-500 mb-4 reveal">( 05. Feedback )</h2>
+                <h3 class="font-display text-fluid-h2 text-stone-900 leading-tight mb-6 reveal">Already rented with us?</h3>
+                <p class="text-stone-500 font-light leading-relaxed max-w-lg mx-auto mb-10 reveal reveal-delay-1">Your experience helps other travellers decide, and helps us do better. Scan from another device, or tap to open the form on this one.</p>
+
+                <div class="inline-flex flex-col sm:flex-row items-center gap-6 sm:gap-8 bg-white border border-stone-200 rounded-xl px-8 md:px-12 py-10 reveal reveal-delay-2">
+                    <div class="flex flex-col items-center gap-3">
+                        <img src="assets/images/qr-code.png" width="160" height="160" loading="lazy" decoding="async" alt="QR code linking to the review form" class="editorial-img rounded-lg">
+                        <p class="text-[10px] tracking-widest uppercase text-stone-400">Scan to Review</p>
+                    </div>
+
+                    <div class="flex items-center gap-3 sm:flex-col text-stone-300" aria-hidden="true">
+                        <span class="h-px w-10 sm:h-10 sm:w-px bg-stone-200"></span>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-stone-400">Or</span>
+                        <span class="h-px w-10 sm:h-10 sm:w-px bg-stone-200"></span>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-3">
+                        <a href="https://forms.gle/GvnwYND12L4boZph7" target="_blank" rel="noopener" class="inline-flex items-center gap-3 bg-stone-900 text-stone-50 text-sm font-semibold uppercase tracking-widest px-6 py-3 rounded-xl hover:opacity-85 transition-opacity whitespace-nowrap">
+                            Leave a Review <i class="ph ph-arrow-up-right"></i>
+                        </a>
+                        <p class="text-[10px] tracking-widest uppercase text-stone-400">Tap to Open Form</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06. Reserve: the main booking enquiry form — the last thing a visitor does before the footer. -->
+        <section id="book" class="bg-stone-50 py-20 md:py-28 px-6 md:px-12 border-t border-stone-200">
+            <div class="max-w-3xl mx-auto text-center reveal">
+                <h2 class="font-display text-xs tracking-widest uppercase text-stone-500 mb-4">( 06. Get In Touch )</h2>
+                <h3 class="font-display text-fluid-h2 leading-none mb-6">Reserve your journey.</h3>
+                <p class="text-stone-500 font-light max-w-lg mx-auto mb-12">Reach out directly to arrange your vehicle. We'll confirm the rate and details before anything is booked. No form to fill in, just pick a way to reach us.</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <a href="tel:+918090202020" class="reveal reveal-delay-1 group flex flex-col items-center gap-3 bg-stone-900 text-stone-50 rounded-xl py-10 px-4 hover:opacity-85 transition-opacity">
+                        <i class="ph ph-phone text-3xl"></i>
+                        <span class="text-sm font-semibold uppercase tracking-widest">Call Now</span>
+                        <span class="text-xs text-stone-400">+91 80902 02020</span>
+                    </a>
+                    <a href="https://wa.me/918090202020" target="_blank" rel="noopener" class="reveal reveal-delay-2 group flex flex-col items-center gap-3 bg-[#25D366] text-white rounded-xl py-10 px-4 hover:opacity-85 transition-opacity">
+                        <i class="ph-fill ph-whatsapp-logo text-3xl"></i>
+                        <span class="text-sm font-semibold uppercase tracking-widest">WhatsApp Us</span>
+                        <span class="text-xs text-white/80">Fastest response</span>
+                    </a>
+                    <a href="mailto:newabhaitravels@yahoo.co.in" class="reveal reveal-delay-3 group flex flex-col items-center gap-3 bg-white border border-stone-300 text-stone-900 rounded-xl py-10 px-4 hover:border-stone-900 transition-colors">
+                        <i class="ph ph-envelope-simple text-3xl"></i>
+                        <span class="text-sm font-semibold uppercase tracking-widest">Email Us</span>
+                        <span class="text-xs text-stone-500 break-all">newabhaitravels@yahoo.co.in</span>
+                    </a>
+                </div>
+
+                <a href="https://www.google.com/maps/search/?api=1&query=111-A%2F5+Ashok+Nagar+Hotel+Bliss+Building+G.T+Road+Kanpur" target="_blank" rel="noopener" class="reveal reveal-delay-3 inline-flex items-start gap-2 mt-8 text-sm text-stone-500 hover:text-stone-900 transition-colors">
+                    <i class="ph ph-map-pin text-base mt-0.5"></i>
+                    <span>111-A/5, Ashok Nagar, Hotel Bliss Building, G.T. Road, Kanpur</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Terms & Conditions -->
+        <div class="bg-stone-50 px-6 md:px-12 pb-24">
+        <div class="max-w-3xl mx-auto" id="terms">
+            <details class="border-t border-b border-stone-200 py-2">
+                <summary class="font-display text-sm tracking-widest uppercase flex justify-between items-center gap-4 py-6 hover:text-stone-500 transition-colors">
+                    Terms &amp; Conditions
+                    <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
+                    <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
+                </summary>
+                <div class="pb-8 text-stone-500 font-light leading-relaxed space-y-4">
+                    <p>New Abhai Travels provides transportation and travel services based on the information and requirements provided by the customer. Vehicle availability, fares, routes, timings, and services may be subject to change due to traffic, weather, road conditions, government regulations, vehicle breakdowns, or other unforeseen circumstances.</p>
+                    <p>Customers are requested to provide accurate travel details at the time of booking. Any additional charges arising from changes in itinerary, extra waiting time, additional kilometres, tolls, parking, permits, or other applicable expenses may be payable by the customer.</p>
+                    <p>New Abhai Travels will make reasonable efforts to provide safe, reliable, and timely services but shall not be responsible for delays or disruptions caused by circumstances beyond its reasonable control.</p>
+                    <p>By booking our services, the customer agrees to the applicable terms and conditions.</p>
+                    <p><a href="terms-and-conditions.html" class="text-stone-900 underline underline-offset-2">Read the full Terms &amp; Conditions →</a></p>
+                </div>
+            </details>
+        </div>
+        </div>
+
+        <footer class="bg-stone-50 border-t border-stone-200 pt-12 pb-36 px-6 md:px-12 text-sm font-light text-stone-500">
+            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-6 text-center lg:text-left">
+                <p>&copy; 2026 New Abhai Travels. <span class="text-stone-400">Reliable Travel. Professional Service.</span></p>
+                <div class="flex gap-8 uppercase tracking-widest text-xs">
+                    <a href="https://www.instagram.com/new_abhai_travels/" target="_blank" rel="noopener" class="link-underline hover:text-stone-900 transition-colors">Instagram</a>
+                    <a href="https://www.facebook.com/share/19r9PLL4hs/" target="_blank" rel="noopener" class="link-underline hover:text-stone-900 transition-colors">Facebook</a>
+                </div>
+                <nav aria-label="Legal" class="flex flex-wrap lg:flex-nowrap justify-center gap-x-6 gap-y-3 uppercase tracking-widest text-xs">
+                    <a href="privacy-policy.html" class="link-underline hover:text-stone-900 transition-colors">Privacy</a>
+                    <a href="terms-and-conditions.html" class="link-underline hover:text-stone-900 transition-colors">Terms</a>
+                    <a href="cancellation-refund-policy.html" class="link-underline hover:text-stone-900 transition-colors">Refunds</a>
+                    <a href="disclaimer.html" class="link-underline hover:text-stone-900 transition-colors">Disclaimer</a>
+                    <a href="grievance-redressal.html" class="link-underline hover:text-stone-900 transition-colors">Grievances</a>
+                </nav>
+            </div>
+        </footer>
+    </main>
+
+    <!-- WhatsApp FAB: pinned bottom-right on every page, above the road-car band. -->
+    <a href="https://wa.me/918090202020?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20vehicle." target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp" class="fixed right-4 md:right-6 bottom-16 z-40 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+        <span class="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-40" aria-hidden="true"></span>
+        <i class="ph-fill ph-whatsapp-logo text-3xl relative"></i>
+    </a>
+
+    <!-- Scroll-driven car: tracks page-scroll progress along a thin road line, travelling left to right
+         as the visitor scrolls down, with a light suspension tilt and wheel spin tied to scroll speed. -->
+    <div id="scroll-car-container" class="fixed left-0 w-full z-40 pointer-events-none h-12" aria-hidden="true">
+        <!-- Faint Road Base -->
+        <div class="car-road-base absolute bottom-[6px] left-0 w-full h-[1px] bg-stone-900/10"></div>
+        <!-- Solid Road Fill (Progress Bar) -->
+        <div id="scroll-road-fill" class="absolute bottom-[6px] left-0 w-full h-[1px] bg-stone-900 origin-left scale-x-0 will-change-transform"></div>
+
+        <!-- Car X-Axis Container -->
+        <div id="scroll-car-x" class="absolute bottom-0 left-0 w-12 h-8 will-change-transform" style="transform: translate3d(0px, 0, 0);">
+
+            <!-- Suspension & Direction Container (Handles Tilt and Flip) -->
+            <div id="scroll-car-suspension" class="w-full h-full relative origin-bottom transition-transform duration-150 ease-out">
+
+                <!-- Aerodynamic Wind Streaks (Appear on fast scroll) -->
+                <div id="car-wind" class="absolute top-2 right-full mr-2 flex flex-col gap-[3px] opacity-0 transition-opacity duration-300">
+                    <div class="w-5 h-[1px] bg-stone-400"></div>
+                    <div class="w-3 h-[1px] bg-stone-400 translate-x-2"></div>
+                </div>
+
+                <!-- Custom SUV Silhouette -->
+                <svg width="48" height="22" viewBox="0 0 48 22" class="car-body absolute bottom-[2px] left-0 text-stone-900 drop-shadow-sm">
+                    <!-- Body with wheel arches -->
+                    <path d="M5 20H9C9.5 16.5 12 14 15.5 14C19 14 21.5 16.5 22 20H34C34.5 16.5 37 14 40.5 14C44 14 46.5 16.5 47 20H48V11C48 7 43 3 39 3H19C14 3 10 7 8 7H3C1.5 7 0 8.5 0 10.5V18C0 19.1 0.9 20 2 20H5Z" fill="currentColor"/>
+                    <!-- Windows -->
+                    <path class="car-window" d="M19 4.5H38L43 9.5H13L19 4.5Z" fill="#F9F9F8"/>
+                </svg>
+
+                <!-- Rotating Rear Wheel -->
+                <svg class="car-wheel absolute bottom-[2px] left-[10px] w-[11px] h-[11px] text-stone-900 origin-center" viewBox="0 0 16 16">
+                    <circle class="car-wheel-hub" cx="8" cy="8" r="6" stroke="currentColor" stroke-width="4" fill="#F9F9F8"/>
+                    <path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="2"/>
+                </svg>
+
+                <!-- Rotating Front Wheel -->
+                <svg class="car-wheel absolute bottom-[2px] left-[35px] w-[11px] h-[11px] text-stone-900 origin-center" viewBox="0 0 16 16">
+                    <circle class="car-wheel-hub" cx="8" cy="8" r="6" stroke="currentColor" stroke-width="4" fill="#F9F9F8"/>
+                    <path d="M8 2V14M2 8H14" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonial Video Modal: plays the tapped customer clip full-screen-ish, paused and unloaded on close. -->
+    <div id="testimonial-video-modal" class="fixed inset-0 z-[85] bg-stone-900/70 backdrop-blur-md hidden items-center justify-center p-4 md:p-6" role="dialog" aria-modal="true" aria-label="Customer video testimonial" onclick="if (event.target === this) closeTestimonialVideo();">
+        <div class="w-full max-w-sm relative">
+            <button onclick="closeTestimonialVideo()" aria-label="Close video" class="absolute -top-12 right-0 md:top-4 md:right-4 z-20 w-10 h-10 rounded-full bg-stone-50/80 backdrop-blur-sm border border-stone-300 flex items-center justify-center hover:bg-stone-900 hover:text-stone-50 transition-colors">
+                <i class="ph ph-x text-lg"></i>
+            </button>
+            <video id="testimonial-video-player" class="w-full aspect-[9/16] bg-black rounded-lg" controls playsinline></video>
+        </div>
+    </div>
+
+    <!-- Fullscreen Image Lightbox: full-size view of whichever vehicle photo is open in the detail
+         modal, with arrow navigation through that vehicle's whole photo set. Stays in sync with the
+         modal's own main image/thumbnails via showModalPhoto(). -->
+    <div id="image-lightbox" class="fixed inset-0 z-[90] bg-stone-900/80 backdrop-blur-lg hidden items-center justify-center p-4 md:p-8" role="dialog" aria-modal="true" aria-label="Full screen photo view" onclick="if (event.target === this) closeLightbox();">
+        <button onclick="closeLightbox()" aria-label="Close full screen view" class="absolute top-4 right-4 md:top-6 md:right-6 z-20 w-11 h-11 rounded-full bg-stone-50/80 backdrop-blur-sm border border-stone-300 flex items-center justify-center text-stone-900 hover:bg-stone-900 hover:text-stone-50 transition-colors">
+            <i class="ph ph-x text-xl"></i>
+        </button>
+        <button id="lightbox-prev" onclick="stepLightbox(-1)" aria-label="Previous photo" class="hidden absolute left-2 md:left-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-stone-50/80 backdrop-blur-sm border border-stone-300 items-center justify-center text-stone-900 hover:bg-stone-900 hover:text-stone-50 transition-colors">
+            <i class="ph ph-caret-left text-xl"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="" class="max-w-full max-h-full object-contain rounded">
+        <button id="lightbox-next" onclick="stepLightbox(1)" aria-label="Next photo" class="hidden absolute right-2 md:right-6 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-stone-50/80 backdrop-blur-sm border border-stone-300 items-center justify-center text-stone-900 hover:bg-stone-900 hover:text-stone-50 transition-colors">
+            <i class="ph ph-caret-right text-xl"></i>
+        </button>
+        <span id="lightbox-counter" class="hidden absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-md bg-stone-50/80 backdrop-blur-sm text-stone-900 text-xs font-medium tabular-nums"></span>
+    </div>
+
+    <!-- Vehicle Detail Modal: same journey as before — browse the grid, click a card, review details,
+         then enquire from here rather than committing to anything sight-unseen. -->
+    <div id="vehicle-modal" class="fixed inset-0 z-[80] bg-stone-900/60 backdrop-blur-md hidden items-center justify-center p-4 md:p-6" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if (event.target === this) closeModal();">
+        <div class="bg-stone-50 w-full max-w-4xl md:max-w-5xl overflow-hidden relative flex flex-col md:flex-row max-h-[90dvh] rounded-xl" id="modal-content">
+
+            <button onclick="closeModal()" aria-label="Close vehicle details" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-stone-50 border border-stone-300 flex items-center justify-center text-red-600 hover:bg-stone-900 hover:text-red-500 transition-colors">
+                <i class="ph ph-x text-lg"></i>
+            </button>
+
+            <!-- Photo column: always kept at the source photos' own 4:3 ratio (never stretched, so
+                 nothing gets cropped or letterboxed — see syncModalPhotoHeight for how its size is
+                 chosen). Fixed-ratio on mobile; on md+ its height is set to match the details column's
+                 own natural height (capped so its derived width can't exceed md:max-w-[55%]), so the
+                 card is as compact as the details content allows without ever distorting the photo. -->
+            <div id="modal-photo-col" class="w-full md:w-auto md:max-w-[55%] shrink-0 md:self-start relative bg-stone-100 overflow-hidden aspect-[4/3]">
+                <img id="modal-img" src="" alt="" onclick="openLightbox()" class="w-full h-full object-contain editorial-img transition-opacity duration-300 cursor-zoom-in">
+                <!-- Shown whenever modal-img is mid-load (see setMainImage) — most of the time this
+                     never becomes visible at all, since the card-visibility prefetch below already
+                     has the photo cached by the time someone actually opens the modal. -->
+                <div id="modal-img-loader" class="hidden absolute inset-0 z-[5] flex items-center justify-center bg-stone-100">
+                    <span class="w-8 h-8 rounded-full border-2 border-stone-300 border-t-stone-900 animate-spin"></span>
+                </div>
+                <span id="modal-tag" class="absolute top-6 left-6 z-10 px-3 py-1 rounded-md bg-stone-900 text-stone-50 text-[10px] tracking-widest uppercase"></span>
+                <button type="button" onclick="openLightbox()" aria-label="View photo full screen" class="absolute top-4 right-16 z-10 w-10 h-10 rounded-full bg-stone-50/90 backdrop-blur-sm border border-stone-300 flex items-center justify-center text-stone-900 hover:bg-stone-900 hover:text-stone-50 transition-colors">
+                    <i class="ph ph-arrows-out text-lg"></i>
+                </button>
+                <div id="modal-gallery" class="hidden absolute bottom-0 inset-x-0 z-10 flex gap-2 justify-start flex-wrap p-4 bg-gradient-to-t from-stone-900/70 to-transparent"></div>
+            </div>
+
+            <!-- Details column: scrolls independently of the photo, which stays put beside it on md+
+                 (and stays pinned above it on mobile) rather than scrolling away with the rest. -->
+            <div id="modal-details-col" class="w-full md:flex-1 md:self-start min-h-0 md:max-h-[90dvh] overflow-y-auto">
+                <div class="p-8">
+                    <p id="modal-cat" class="font-display text-xs tracking-widest uppercase text-stone-500 mb-1">Category</p>
+                    <h3 id="modal-title" class="font-display text-2xl md:text-3xl mb-2">Vehicle Name</h3>
+
+                    <!-- Seat-capacity variant switcher: only populated/shown for vehicles that come in
+                         multiple seat configurations (currently the tempo travellers and buses). -->
+                    <div id="modal-variants" class="hidden flex flex-wrap items-center gap-2 mb-6"></div>
+
+                    <div class="grid grid-cols-2 gap-y-3 gap-x-4 mb-4 text-sm">
+                        <div>
+                            <p class="text-[10px] tracking-widest uppercase text-stone-500 mb-1 break-words">Capacity</p>
+                            <p id="modal-seats" class="font-medium">5 Seats</p>
+                        </div>
+                        <div>
+                            <p id="modal-stat2-label" class="text-[10px] tracking-widest uppercase text-stone-500 mb-1 break-words">Transmission</p>
+                            <p id="modal-stat2-value" class="font-medium">Manual</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] tracking-widest uppercase text-stone-500 mb-1 break-words">Climate</p>
+                            <p id="modal-ac" class="font-medium">AC</p>
+                        </div>
+                        <div>
+                            <p id="modal-stat4-label" class="text-[10px] tracking-widest uppercase text-stone-500 mb-1 break-words">Fuel Type</p>
+                            <p id="modal-stat4-value" class="font-medium">Diesel/Petrol</p>
+                        </div>
+                    </div>
+
+                    <!-- Amenities list — only populated/shown for vehicles that carry a `features`
+                         list (currently the tempo travellers). -->
+                    <div id="modal-features" class="hidden mb-8">
+                        <p class="text-[10px] tracking-widest uppercase text-stone-500 mb-3">Features</p>
+                        <div id="modal-features-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3"></div>
+                    </div>
+
+                    <div class="border-t border-b border-stone-200 py-4 mb-4">
+                        <p class="text-xs tracking-widest uppercase text-stone-500 mb-1">Rental Rate</p>
+                        <p class="font-display text-xl mb-2">Confirmed on Enquiry</p>
+                        <p class="text-xs text-stone-500 font-light leading-snug">No security deposit · Driver &amp; fuel included · Exact rate shared over WhatsApp or a call</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 md:gap-3">
+                        <a id="modal-whatsapp" href="https://wa.me/918090202020" target="_blank" rel="noopener" class="px-1 py-3 rounded-md bg-stone-900 text-stone-50 text-center text-[10px] md:text-xs tracking-tight uppercase hover:opacity-80 transition-opacity flex items-center justify-center whitespace-nowrap">WhatsApp Us</a>
+                        <a id="modal-call" href="tel:+918090202020" class="px-1 py-3 rounded-md border border-stone-300 text-center text-[10px] md:text-xs tracking-tight uppercase hover:bg-stone-900 hover:text-stone-50 hover:border-stone-900 transition-colors flex items-center justify-center whitespace-nowrap">Call Now</a>
+                        <a id="modal-email" href="mailto:newabhaitravels@yahoo.co.in" class="px-1 py-3 rounded-md border border-stone-300 text-center text-[10px] md:text-xs tracking-tight uppercase hover:bg-stone-900 hover:text-stone-50 hover:border-stone-900 transition-colors flex items-center justify-center whitespace-nowrap">Email Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Real fleet data ---
+        const carData = [
+            { id: 'c1', category: 'car', type: 'mpv', name: 'Toyota Innova Crysta', label: 'MPV', seats: 7, trans: 'Manual', ac: true, fuel: 'Diesel', isPopular: true, images: ['assets/images/fleet/innova-crysta/1.jpg', 'assets/images/fleet/innova-crysta/2.jpg', 'assets/images/fleet/innova-crysta/3.jpg', 'assets/images/fleet/innova-crysta/4.jpg', 'assets/images/fleet/innova-crysta/5.jpg'] },
+            { id: 'c2', category: 'car', type: 'sedan', name: 'Maruti Dzire', label: 'Sedan', seats: 4, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['assets/images/fleet/dzire/25.jpg', 'assets/images/fleet/dzire/26.jpg', 'assets/images/fleet/dzire/27.jpg', 'assets/images/fleet/dzire/28.jpg'] },
+            { id: 'c3', category: 'car', type: 'hatchback', name: 'Maruti WagonR', label: 'Hatchback', seats: 3, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['assets/images/fleet/wagonr/51.jpg', 'assets/images/fleet/wagonr/51.jpg', 'assets/images/fleet/wagonr/50.jpg', 'assets/images/fleet/wagonr/52.jpg'] },
+            { id: 'c4', category: 'car', type: 'mpv', name: 'Maruti Ertiga', label: 'MPV', seats: 6, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['assets/images/fleet/ertiga/20.jpg', 'assets/images/fleet/ertiga/21.jpg', 'assets/images/fleet/ertiga/22.jpg', 'assets/images/fleet/ertiga/23.jpg', 'assets/images/fleet/ertiga/24.jpg'] },
+            { id: 'c5', category: 'car', type: 'suv', name: 'Toyota Fortuner', label: 'SUV', seats: 7, trans: 'Automatic', ac: true, fuel: 'Diesel', isPopular: true, images: ['assets/images/fleet/fortuner/44.jpg', 'assets/images/fleet/fortuner/44.jpg', 'assets/images/fleet/fortuner/42.jpg', 'assets/images/fleet/fortuner/43.jpg', 'assets/images/fleet/fortuner/45.jpg'] },
+            { id: 'c6', category: 'car', type: 'suv', name: 'Mahindra XUV300', label: 'SUV', seats: 5, trans: 'Manual', ac: true, fuel: 'Petrol', isPopular: false, images: ['assets/images/fleet/xuv300/47.jpg', 'assets/images/fleet/xuv300/47.jpg', 'assets/images/fleet/xuv300/46.jpg', 'assets/images/fleet/xuv300/48.jpg'] },
+        ];
+
+        // Shared by every Tempo Traveller card/modal below — same amenities across all three seat
+        // configurations, so defined once here rather than repeated on each entry.
+        const TEMPO_FEATURES = [
+            { icon: 'ph-snowflake', label: 'Fully Air-Conditioned' },
+            { icon: 'ph-television', label: 'LED TV / Entertainment Screen' },
+            { icon: 'ph-speaker-high', label: 'Music System' },
+            { icon: 'ph-armchair', label: 'Comfortable Push-Back Seats' },
+            { icon: 'ph-plug-charging', label: 'Mobile Charging Points' },
+            { icon: 'ph-suitcase-rolling', label: 'Ample Luggage Space' },
+            { icon: 'ph-lightbulb', label: 'Reading / Ambient Lights' },
+            { icon: 'ph-first-aid-kit', label: 'First-Aid Kit' },
+            { icon: 'ph-map-pin', label: 'GPS Tracking' },
+            { icon: 'ph-steering-wheel', label: 'Experienced Driver' },
+        ];
+
+        // Tempo Travellers: one card per seat configuration (each is different enough — mood lighting,
+        // curtains, layout — to deserve its own card and photos, not a switcher inside one modal).
+        // Bus stays a single combined card below: fewer real distinguishing details between the three
+        // sizes, and no dedicated photos yet, so a seat-picker inside one card fits better there.
+        const busData = [
+            { id: 'b1', category: 'bus', type: 'traveller', name: 'Tempo Traveller (17 Seater)', label: 'Tempo Traveller', seats: 17, ac: true, idealFor: 'TV, recliners & mood lighting', isPopular: false, images: ['assets/images/fleet/tempo-traveller-17/61.jpg', 'assets/images/fleet/tempo-traveller-17/61.jpg', 'assets/images/fleet/tempo-traveller-17/62.jpg', 'assets/images/fleet/tempo-traveller-17/63.jpg'], features: TEMPO_FEATURES },
+            { id: 'b2', category: 'bus', type: 'traveller', name: 'Tempo Traveller (21 Seater, Our Special)', label: 'Tempo Traveller', seats: 21, ac: true, idealFor: 'Our most requested configuration', isPopular: true, images: ['assets/images/fleet/tempo-traveller-21/58.jpg', 'assets/images/fleet/tempo-traveller-21/58.jpg', 'assets/images/fleet/tempo-traveller-21/56.jpg', 'assets/images/fleet/tempo-traveller-21/57.jpg', 'assets/images/fleet/tempo-traveller-21/59.jpg', 'assets/images/fleet/tempo-traveller-21/60.jpg'], features: TEMPO_FEATURES },
+            { id: 'b3', category: 'bus', type: 'traveller', name: 'Tempo Traveller (26 Seater)', label: 'Tempo Traveller', seats: 26, ac: true, idealFor: 'TV, recliners, curtains & lighting', isPopular: false, images: ['assets/images/fleet/tempo-traveller-26/66.jpg', 'assets/images/fleet/tempo-traveller-26/66.jpg', 'assets/images/fleet/tempo-traveller-26/67.jpg', 'assets/images/fleet/tempo-traveller-26/68.jpg'], features: TEMPO_FEATURES },
+            {
+                id: 'b4', category: 'bus', type: 'coach', name: 'Bus', label: 'Bus', ac: true, isPopular: false,
+                images: ['assets/images/fleet/bus/54.jpg', 'assets/images/fleet/bus/54.jpg', 'assets/images/fleet/bus/52.jpg', 'assets/images/fleet/bus/53.jpg', 'assets/images/fleet/bus/55.jpg'],
+                variants: [
+                    { seats: 45, idealFor: 'School & college trips' },
+                    { seats: 55, idealFor: 'Corporate events & tours' },
+                    { seats: 60, idealFor: 'Large-scale group events' },
+                ]
+            },
+        ];
+
+        // Picks which variant a card/modal shows by default: the one flagged isPopular, else the first.
+        function getDefaultVariant(item) {
+            if (!item.variants) return null;
+            return item.variants.find(v => v.isPopular) || item.variants[0];
+        }
+
+        // Every photo path a vehicle could possibly show — its own images/image plus every variant's —
+        // so the modal never has to fetch anything it hasn't already started fetching in the background.
+        function getAllImageSources(item) {
+            const sources = [];
+            if (item.images) sources.push(...item.images);
+            if (item.image) sources.push(item.image);
+            if (item.variants) {
+                item.variants.forEach(v => {
+                    if (v.images) sources.push(...v.images);
+                    if (v.image) sources.push(v.image);
+                });
+            }
+            return sources;
+        }
+
+        function preloadVehicleImages(item) {
+            getAllImageSources(item).forEach(src => { new Image().src = src; });
+        }
+
+        // Starts fetching a vehicle's full photo set as soon as its card scrolls near the viewport —
+        // well before anyone could realistically tap "View Details" — so the modal opens on photos
+        // that are already cached instead of ones the browser has never requested yet. Cards get a
+        // ~300px head start (rootMargin) so the fetch is already underway by the time a card is
+        // actually on screen, not just starting the instant it appears.
+        const cardPreloadObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                preloadVehicleImages(entry.target._vehicleItem);
+                cardPreloadObserver.unobserve(entry.target);
+            });
+        }, { rootMargin: '300px' });
+
+        const typeLabels = {
+            car: { all: 'All', mpv: 'MPV', sedan: 'Sedan', hatchback: 'Hatchback', suv: 'SUV' },
+            bus: { all: 'All', traveller: 'Tempo Traveller', coach: 'Bus' }
+        };
+
+        const state = { category: 'car', type: 'all', capacity: 'all', ac: 'all' };
+        let currentModalItem = null;
+
+        // --- Video testimonials: add another `key: { src }` entry here (and a matching button above)
+        // once a third review comes in. `poster` is optional — omit it for clips with no still frame.
+        const testimonialVideos = {
+            review1: { src: 'assets/videos/review-1.mp4', poster: 'assets/videos/review-1-poster.jpg' },
+            review2: { src: 'assets/videos/review-2.mp4', poster: 'assets/videos/review-2-poster.jpg' },
+        };
+
+        function openTestimonialVideo(key) {
+            const data = testimonialVideos[key];
+            if (!data) return;
+            const player = document.getElementById('testimonial-video-player');
+            if (data.poster) player.setAttribute('poster', data.poster); else player.removeAttribute('poster');
+            player.src = data.src;
+            const modal = document.getElementById('testimonial-video-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            player.play().catch(() => {});
+        }
+
+        function closeTestimonialVideo() {
+            const player = document.getElementById('testimonial-video-player');
+            player.pause();
+            player.removeAttribute('src');
+            player.load();
+            const modal = document.getElementById('testimonial-video-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // --- Category (Automobiles / Tempo & Coaches) ---
+        function setCategory(category) {
+            state.category = category;
+            state.type = 'all';
+            state.capacity = 'all';
+            state.ac = 'all';
+
+            document.getElementById('tab-car').classList.toggle('bg-stone-900', category === 'car');
+            document.getElementById('tab-car').classList.toggle('text-stone-50', category === 'car');
+            document.getElementById('tab-car').classList.toggle('text-stone-500', category !== 'car');
+            document.getElementById('tab-car').setAttribute('aria-selected', category === 'car');
+
+            document.getElementById('tab-bus').classList.toggle('bg-stone-900', category === 'bus');
+            document.getElementById('tab-bus').classList.toggle('text-stone-50', category === 'bus');
+            document.getElementById('tab-bus').classList.toggle('text-stone-500', category !== 'bus');
+            document.getElementById('tab-bus').setAttribute('aria-selected', category === 'bus');
+
+            document.getElementById('fleet-heading').textContent = category === 'car' ? 'Choose Your Automobile' : 'Choose Your Tempo or Coach';
+
+            buildFilters();
+            applyFilters();
+        }
+
+        function buildFilters() {
+            const data = state.category === 'car' ? carData : busData;
+            const labels = typeLabels[state.category];
+            const types = ['all', ...new Set(data.map(v => v.type))];
+
+            document.getElementById('filter-container').innerHTML = types.map(t => {
+                const active = t === state.type;
+                return `<button onclick="setType('${t}', false)" class="fleet-btn px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${active ? 'bg-stone-900 text-white border-stone-900' : 'bg-white text-stone-600 border-stone-300 hover:border-stone-900 hover:text-stone-900'}">${labels[t]}</button>`;
+            }).join('');
+
+            document.getElementById('filter-container-mobile').innerHTML = types.map(t => {
+                const active = t === state.type;
+                return `<button onclick="setType('${t}', true)" class="fleet-btn px-5 py-2.5 rounded-xl text-sm border ${active ? 'bg-stone-900 text-stone-50 border-stone-900' : 'border-stone-300 text-stone-500'}">${labels[t]}</button>`;
+            }).join('');
+
+            const capacities = [...new Set(data.flatMap(v => v.variants ? v.variants.map(x => x.seats) : [v.seats]))].sort((a, b) => a - b);
+            const capSelect = document.getElementById('capacity-select');
+            capSelect.innerHTML = '<option value="all">Any Capacity</option>' + capacities.map(c => `<option value="${c}">${c} Seater</option>`).join('');
+            capSelect.value = state.capacity;
+
+            document.getElementById('capacity-container-mobile').innerHTML = ['all', ...capacities].map(c => {
+                const active = String(c) === String(state.capacity);
+                return `<button onclick="setCapacity('${c}')" class="px-5 py-2.5 rounded-xl text-sm border ${active ? 'bg-stone-900 text-stone-50 border-stone-900' : 'border-stone-300 text-stone-500'}">${c === 'all' ? 'Any' : c + ' Seater'}</button>`;
+            }).join('');
+
+            updateFilterIndicators();
+        }
+
+        function setType(type) {
+            state.type = type;
+            buildFilters();
+            applyFilters();
+        }
+
+        function setCapacity(capacity) {
+            state.capacity = capacity;
+            buildFilters();
+            applyFilters();
+        }
+
+        function setAc(ac) {
+            state.ac = ac;
+            updateFilterIndicators();
+            applyFilters();
+        }
+
+        function updateFilterIndicators() {
+            const acSelect = document.getElementById('ac-select');
+            if (acSelect) acSelect.value = state.ac;
+
+            document.querySelectorAll('[data-ac-btn-m]').forEach(btn => {
+                const active = btn.getAttribute('data-ac-btn-m') === state.ac;
+                btn.classList.toggle('bg-stone-900', active);
+                btn.classList.toggle('text-stone-50', active);
+                btn.classList.toggle('border-stone-900', active);
+                btn.classList.toggle('border-stone-300', !active);
+            });
+
+            const badge = document.getElementById('filter-count-badge');
+            const activeCount = (state.type !== 'all' ? 1 : 0) + (state.capacity !== 'all' ? 1 : 0) + (state.ac !== 'all' ? 1 : 0);
+            badge.textContent = activeCount || '';
+            badge.classList.toggle('hidden', activeCount === 0);
+            badge.classList.toggle('flex', activeCount > 0);
+        }
+
+        function applyFilters() {
+            const data = state.category === 'car' ? carData : busData;
+            let items = data;
+            if (state.type !== 'all') items = items.filter(v => v.type === state.type);
+            if (state.capacity !== 'all') items = items.filter(v => v.variants
+                ? v.variants.some(x => String(x.seats) === String(state.capacity))
+                : String(v.seats) === String(state.capacity));
+            if (state.ac !== 'all') items = items.filter(v => v.ac === (state.ac === 'ac'));
+            renderGrid(items);
+        }
+
+        function renderGrid(items) {
+            const grid = document.getElementById('fleet-grid');
+            const empty = document.getElementById('empty-state');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                empty.classList.remove('hidden');
+                grid.appendChild(buildRequestCard());
+                updateFleetScrollThumb();
+                return;
+            }
+            empty.classList.add('hidden');
+
+            const total = String(items.length).padStart(2, '0');
+            const typeIcon = state.category === 'bus' ? 'ph-bus' : 'ph-car';
+
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'fleet-card bg-white border border-stone-200 rounded-lg overflow-hidden cursor-pointer shadow-sm hover:shadow-lg hover:border-stone-300 transition-all duration-300';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.onclick = () => openModal(item.id, item.category);
+                card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(item.id, item.category); } };
+
+                // `images[0]` is the card thumbnail for vehicles with a real photo set; `image` is the
+                // fallback for vehicles that don't have one yet. A vehicle with `variants` (different
+                // seat configurations of the same type) uses its own item-level photo set for the
+                // card if it has one, else falls back to its default variant's photo.
+                const defaultVariant = getDefaultVariant(item);
+                const thumbSource = item.images ? item : (defaultVariant || item);
+                const thumb = thumbSource.images ? thumbSource.images[0] : thumbSource.image;
+                const seatsLabel = item.variants ? item.variants.map(v => v.seats).join(' / ') + ' Seats' : `${item.seats} Seats`;
+                const capacityChips = item.variants
+                    ? item.variants.map(v => `<span class="fleet-chip inline-flex items-center gap-1.5 bg-stone-100 text-stone-700 text-xs font-medium px-2.5 py-1 rounded-md"><i class="ph ph-user"></i> ${v.seats} Seater</span>`).join('')
+                    : `<span class="fleet-chip inline-flex items-center gap-1.5 bg-stone-100 text-stone-700 text-xs font-medium px-2.5 py-1 rounded-md"><i class="ph ph-user"></i> ${item.seats} Seats</span>`;
+                card.innerHTML = `
+                    <div class="relative aspect-[4/3] bg-stone-200 overflow-hidden">
+                        <img src="${thumb}" alt="${item.name}, ${item.label}, ${seatsLabel}" loading="lazy" decoding="async" width="800" height="600" class="w-full h-full object-cover editorial-img">
+                        ${item.isPopular ? `<span class="absolute top-3 left-3 bg-amber-400 text-stone-900 text-[10px] font-bold tracking-wide uppercase px-2.5 py-1 rounded-md shadow-sm">★ Popular</span>` : ''}
+                        <span class="fleet-index-badge absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-stone-900 text-[10px] font-semibold px-2 py-1 rounded-md tabular-nums">${String(index + 1).padStart(2, '0')} / ${total}</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="fleet-name font-display text-xl font-semibold text-stone-900 mb-3 leading-tight">${item.name}</h4>
+                        <div class="flex items-center gap-2 mb-4 flex-wrap">
+                            <span class="fleet-chip inline-flex items-center gap-1.5 bg-stone-100 text-stone-700 text-xs font-medium px-2.5 py-1 rounded-md"><i class="ph ${typeIcon}"></i> ${item.label}</span>
+                            ${capacityChips}
+                            <span class="fleet-chip inline-flex items-center gap-1.5 bg-stone-100 text-stone-700 text-xs font-medium px-2.5 py-1 rounded-md"><i class="ph ph-snowflake"></i> ${item.ac ? 'AC' : 'Non-AC'}</span>
+                        </div>
+                        <div class="fleet-divider flex justify-between items-center pt-3 border-t border-stone-100">
+                            <span class="fleet-status inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>On Enquiry</span>
+                            <span class="fleet-view-btn inline-flex items-center gap-1.5 bg-stone-900 text-white text-xs font-semibold uppercase tracking-wide px-4 py-2 rounded-xl">View Details <i class="ph ph-arrow-right"></i></span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+                card._vehicleItem = item;
+                cardPreloadObserver.observe(card);
+            });
+
+            grid.appendChild(buildRequestCard());
+            updateFleetScrollThumb();
+        }
+
+        // Always the last card in the row (and the only one when a filter matches nothing), so
+        // someone who browses to the end without finding their vehicle has a next step right where
+        // they stopped. Whatever they type is put into the WhatsApp message, so the conversation
+        // opens with the vehicle already named. Copy promises a reply, never availability.
+        function buildRequestCard() {
+            const card = document.createElement('div');
+            card.className = 'fleet-request-card bg-stone-900 text-stone-50 border border-stone-900 rounded-lg overflow-hidden shadow-sm flex flex-col';
+            card.innerHTML = `
+                <div class="p-5 pb-4 flex-1 flex flex-col">
+                    <span class="w-10 h-10 rounded-lg bg-stone-50/10 flex items-center justify-center text-xl mb-4" aria-hidden="true"><i class="ph ph-magnifying-glass"></i></span>
+                    <h4 class="font-display text-xl font-semibold leading-tight mb-2">Can't find your vehicle?</h4>
+                    <p class="text-sm text-stone-300 font-light leading-relaxed mb-5">Tell us the car or bus you have in mind. We'll check whether it can be arranged and get back to you with availability and rate.</p>
+                    <form class="request-form mt-auto" novalidate>
+                        <label for="request-vehicle" class="block text-[11px] font-semibold uppercase tracking-wider text-stone-400 mb-2">Vehicle you're looking for</label>
+                        <input id="request-vehicle" name="vehicle" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Innova Hycross" class="w-full bg-stone-50/10 border border-stone-50/20 rounded-lg px-3 py-2.5 text-base md:text-sm text-stone-50 placeholder:text-stone-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:border-transparent mb-3">
+                        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-stone-50 text-stone-900 text-xs font-semibold uppercase tracking-wide px-4 py-3 rounded-xl hover:bg-amber-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900"><i class="ph-fill ph-whatsapp-logo text-base"></i> Ask on WhatsApp</button>
+                    </form>
+                </div>
+                <div class="px-5 py-3 border-t border-stone-50/15 flex items-center justify-between text-xs">
+                    <span class="text-stone-400">Prefer to talk?</span>
+                    <a href="tel:+918090202020" class="inline-flex items-center gap-1.5 font-semibold text-stone-50 hover:text-amber-400 transition-colors"><i class="ph ph-phone"></i> +91 80902 02020</a>
+                </div>
+            `;
+            card.querySelector('.request-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const vehicle = card.querySelector('#request-vehicle').value.trim();
+                const msg = vehicle
+                    ? `Hi, I'm looking for a ${vehicle}, which isn't listed on your website. Could you check if it can be arranged?`
+                    : `Hi, I'm looking for a vehicle that isn't listed on your website. Could you help?`;
+                window.open(`https://wa.me/918090202020?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+            });
+            return card;
+        }
+
+        // Custom, always-visible scroll indicator for the mobile card row — a real element rather
+        // than a styled native scrollbar, since iOS Safari doesn't allow customizing (or even
+        // permanently showing) its own scrollbar for an overflow container. Thumb width mirrors how
+        // much of the row is currently visible; its position mirrors actual scroll progress, same as
+        // a real scrollbar would.
+        function updateFleetScrollThumb() {
+            const grid = document.getElementById('fleet-grid');
+            const thumb = document.getElementById('fleet-scroll-thumb');
+            if (!grid || !thumb) return;
+            const track = thumb.parentElement;
+            const trackWidth = track.clientWidth;
+            const maxScroll = grid.scrollWidth - grid.clientWidth;
+
+            if (maxScroll <= 0) {
+                thumb.style.width = '100%';
+                thumb.style.left = '0px';
+                return;
+            }
+
+            const thumbWidth = Math.max(trackWidth * 0.15, (grid.clientWidth / grid.scrollWidth) * trackWidth);
+            const maxThumbTravel = trackWidth - thumbWidth;
+            const scrollFraction = grid.scrollLeft / maxScroll;
+
+            thumb.style.width = thumbWidth + 'px';
+            thumb.style.left = (scrollFraction * maxThumbTravel) + 'px';
+        }
+
+        function initFleetScrollThumb() {
+            const grid = document.getElementById('fleet-grid');
+            if (!grid) return;
+            let ticking = false;
+            const onScroll = () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => { updateFleetScrollThumb(); ticking = false; });
+            };
+            grid.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll, { passive: true });
+        }
+
+        // --- Mobile filter sheet ---
+        function openFilterSheet() {
+            document.getElementById('filter-sheet').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            requestAnimationFrame(() => document.getElementById('filter-sheet-panel').classList.remove('translate-y-full'));
+        }
+        function closeFilterSheet() {
+            document.getElementById('filter-sheet-panel').classList.add('translate-y-full');
+            document.body.style.overflow = '';
+            setTimeout(() => document.getElementById('filter-sheet').classList.add('hidden'), 300);
+        }
+
+        // --- Vehicle Detail Modal ---
+        // Sets modal-img's source with a loading spinner for the (rare, thanks to the prefetch-on-
+        // scroll below) case where the photo isn't already cached by the time it's needed.
+        function setMainImage(src) {
+            const modalImg = document.getElementById('modal-img');
+            const loader = document.getElementById('modal-img-loader');
+            if (modalImg.src.endsWith(src)) return;
+            loader.classList.remove('hidden');
+            modalImg.classList.add('opacity-0');
+            modalImg.onload = () => {
+                loader.classList.add('hidden');
+                modalImg.classList.remove('opacity-0');
+            };
+            modalImg.onerror = () => loader.classList.add('hidden');
+            modalImg.src = src;
+        }
+
+        // The full-size photo set for whatever's currently open in the modal (or its selected
+        // variant), plus which one is on screen right now. Shared between the modal's own
+        // thumbnails and the fullscreen lightbox so the two stay in sync either way round.
+        let modalImageList = [];
+        let modalImageIndex = 0;
+
+        // Switches the modal's (and, if open, the lightbox's) main image to modalImageList[index]
+        // and moves the active-border highlight to the matching thumb.
+        function showModalPhoto(index) {
+            if (!modalImageList.length) return;
+            modalImageIndex = ((index % modalImageList.length) + modalImageList.length) % modalImageList.length;
+            const src = modalImageList[modalImageIndex];
+            setMainImage(src);
+            document.querySelectorAll('.modal-thumb').forEach((t, i) => {
+                t.classList.toggle('border-stone-900', i === modalImageIndex);
+                t.classList.toggle('border-transparent', i !== modalImageIndex);
+            });
+            const lightbox = document.getElementById('image-lightbox');
+            if (!lightbox.classList.contains('hidden')) {
+                document.getElementById('lightbox-img').src = src;
+                updateLightboxNav();
+            }
+        }
+
+        // Fills in the photo + gallery thumbnails for whichever variant (or, for cars, the item
+        // itself) is currently selected. Vehicles with a real photo set (`images`) show images[1..]
+        // in the gallery — the first photo is reserved for the card thumbnail. Vehicles without one
+        // yet just fall back to the single placeholder `image`.
+        function renderModalMedia(item, variant) {
+            const source = variant || item;
+            const modalImg = document.getElementById('modal-img');
+            const galleryEl = document.getElementById('modal-gallery');
+            modalImageIndex = 0;
+            if (source.images && source.images.length > 1) {
+                const galleryImages = source.images.slice(1);
+                modalImageList = galleryImages;
+                setMainImage(galleryImages[0]);
+                galleryEl.innerHTML = galleryImages.map((src, i) => `
+                    <button type="button" onclick="showModalPhoto(${i})" aria-label="Show photo ${i + 1}" class="modal-thumb w-14 h-14 rounded overflow-hidden border-2 ${i === 0 ? 'border-stone-900' : 'border-transparent'} shrink-0">
+                        <img src="${src}" alt="" class="w-full h-full object-cover">
+                    </button>
+                `).join('');
+                galleryEl.classList.remove('hidden');
+            } else {
+                modalImageList = [source.image];
+                setMainImage(source.image);
+                galleryEl.classList.add('hidden');
+                galleryEl.innerHTML = '';
+            }
+            modalImg.alt = item.name;
+        }
+
+        // --- Fullscreen Image Lightbox ---
+        function openLightbox() {
+            if (!modalImageList.length) return;
+            document.getElementById('lightbox-img').src = modalImageList[modalImageIndex];
+            document.getElementById('lightbox-img').alt = document.getElementById('modal-img').alt;
+            updateLightboxNav();
+            const lightbox = document.getElementById('image-lightbox');
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('image-lightbox');
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+        }
+
+        function stepLightbox(delta) {
+            showModalPhoto(modalImageIndex + delta);
+        }
+
+        // Shows/hides the prev/next arrows and photo-count badge — only meaningful when there's
+        // more than one photo to page through.
+        function updateLightboxNav() {
+            const multi = modalImageList.length > 1;
+            const prev = document.getElementById('lightbox-prev');
+            const next = document.getElementById('lightbox-next');
+            const counter = document.getElementById('lightbox-counter');
+            prev.classList.toggle('hidden', !multi);
+            prev.classList.toggle('flex', multi);
+            next.classList.toggle('hidden', !multi);
+            next.classList.toggle('flex', multi);
+            counter.classList.toggle('hidden', !multi);
+            counter.textContent = multi ? `${modalImageIndex + 1} / ${modalImageList.length}` : '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('image-lightbox').classList.contains('hidden')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') stepLightbox(-1);
+            if (e.key === 'ArrowRight') stepLightbox(1);
+        });
+
+        // Renders the seat-capacity options for vehicles that come in multiple configurations, as
+        // plain slash-separated text — informational only, not clickable — hidden entirely for
+        // vehicles (cars) with no `variants`. The modal's photo gallery always shows everything
+        // available at once rather than switching per option.
+        function renderVariantPicker(item) {
+            const container = document.getElementById('modal-variants');
+            if (!item.variants) {
+                container.classList.add('hidden');
+                container.classList.remove('flex');
+                container.innerHTML = '';
+                return;
+            }
+            container.innerHTML = item.variants.map((v, i) => {
+                const separator = i < item.variants.length - 1 ? '<span class="text-stone-300">/</span>' : '';
+                return `<span class="text-sm font-semibold text-stone-900">${v.seats} Seater</span>${separator}`;
+            }).join(' ');
+            container.classList.remove('hidden');
+            container.classList.add('flex');
+        }
+
+        function openModal(id, category) {
+            const data = category === 'car' ? carData : busData;
+            const item = data.find(v => v.id === id);
+            if (!item) return;
+            currentModalItem = item;
+
+            const defaultVariant = getDefaultVariant(item);
+
+            // Vehicles with their own item-level photo set (the whole lineup together, e.g. the
+            // tempo collective shots) open on that full gallery; picking a specific seat count
+            // below then switches to that variant's own dedicated photos.
+            renderModalMedia(item, item.images ? null : defaultVariant);
+            renderVariantPicker(item);
+
+            document.getElementById('modal-title').textContent = item.name;
+            document.getElementById('modal-cat').textContent = item.label;
+            document.getElementById('modal-seats').textContent = item.variants
+                ? item.variants.map(v => v.seats).join(' / ') + ' Seats'
+                : `${item.seats} Seats`;
+            document.getElementById('modal-ac').textContent = item.ac ? 'AC' : 'Non-AC';
+            document.getElementById('modal-tag').textContent = item.isPopular ? 'Popular Choice' : item.label;
+
+            if (category === 'car') {
+                document.getElementById('modal-stat2-label').textContent = 'Transmission';
+                document.getElementById('modal-stat2-value').textContent = item.trans;
+                document.getElementById('modal-stat4-label').textContent = 'Fuel Type';
+                document.getElementById('modal-stat4-value').textContent = item.fuel;
+            } else {
+                document.getElementById('modal-stat2-label').textContent = 'Driver';
+                document.getElementById('modal-stat2-value').textContent = 'Included';
+                document.getElementById('modal-stat4-label').textContent = 'Ideal For';
+                document.getElementById('modal-stat4-value').textContent = (defaultVariant || item).idealFor;
+            }
+
+            const featuresEl = document.getElementById('modal-features');
+            if (item.features) {
+                document.getElementById('modal-features-grid').innerHTML = item.features.map(f => `
+                    <div class="flex items-center gap-2 text-sm text-stone-700">
+                        <i class="ph ${f.icon} text-stone-500 text-base shrink-0"></i>
+                        <span>${f.label}</span>
+                    </div>
+                `).join('');
+                featuresEl.classList.remove('hidden');
+            } else {
+                featuresEl.classList.add('hidden');
+                document.getElementById('modal-features-grid').innerHTML = '';
+            }
+
+            const waMessage = `Hi, I'm interested in the ${item.name} (${item.label}). Could you share the rate and availability?`;
+            document.getElementById('modal-whatsapp').href = `https://wa.me/918090202020?text=${encodeURIComponent(waMessage)}`;
+            const emailBody = `Hi, I'm interested in the ${item.name} (${item.label}). Could you share the rate and availability?`;
+            document.getElementById('modal-email').href = `mailto:newabhaitravels@yahoo.co.in?subject=${encodeURIComponent('Enquiry: ' + item.name)}&body=${encodeURIComponent(emailBody)}`;
+
+            const modal = document.getElementById('vehicle-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            syncModalPhotoHeight();
+        }
+
+        // On md+, sizes the photo column's height to match the details column's own natural
+        // (unstretched) height, so the card is exactly as tall as the details content needs — no blank
+        // space below a short photo. The photo's width then simply follows from that height via its
+        // aspect-ratio, so it's never cropped or padded either way. Capped so the derived width can't
+        // exceed the photo column's own md:max-w-[55%]: without that cap, a vehicle with enough content
+        // to need more height than a 4:3 photo could fit in 55% of the modal's width would force a
+        // non-4:3 box. Setting the photo's height changes its own width (via the aspect ratio), which
+        // changes how much width is left for the details column (flex-1) — which can change how much its
+        // text wraps and therefore its natural height. Two passes settles this: the first gets close, the
+        // second re-measures at the width the first pass actually produced and corrects for it.
+        //
+        // The details column is then pinned to that exact same height too (not just left at its own
+        // natural height), so the two columns always end flush — for a car with a short spec sheet
+        // that's a plain visual match, and for a tempo/bus with a features list long enough to exceed it,
+        // it scrolls internally instead of stretching the card. That's the intended tradeoff for those:
+        // showing the full-height, uncropped photo matters more than fitting every feature without a
+        // scroll. Re-run on resize, since the 768px stacked/columns switch changes which layout applies.
+        function syncModalPhotoHeight() {
+            const photoCol = document.getElementById('modal-photo-col');
+            const detailsCol = document.getElementById('modal-details-col');
+            const modalContent = document.getElementById('modal-content');
+            if (!photoCol || !detailsCol || !modalContent) return;
+            photoCol.style.height = '';
+            detailsCol.style.maxHeight = '';
+            if (window.innerWidth < 768) return;
+            const maxWidthPx = modalContent.getBoundingClientRect().width * 0.55;
+            const maxHeightFromWidth = maxWidthPx / (4 / 3);
+            let targetHeight;
+            for (let i = 0; i < 2; i++) {
+                const detailsHeight = detailsCol.getBoundingClientRect().height;
+                targetHeight = Math.max(Math.min(detailsHeight, maxHeightFromWidth), 240);
+                photoCol.style.height = targetHeight + 'px';
+            }
+            detailsCol.style.maxHeight = targetHeight + 'px';
+        }
+
+        window.addEventListener('resize', () => {
+            const modal = document.getElementById('vehicle-modal');
+            if (modal && !modal.classList.contains('hidden')) syncModalPhotoHeight();
+        });
+
+        function closeModal() {
+            const modal = document.getElementById('vehicle-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+            closeLightbox();
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.querySelector('[aria-controls="mobile-menu"]');
+            const isOpen = !menu.classList.contains('invisible');
+            if (isOpen) {
+                menu.classList.add('opacity-0', 'invisible', 'pointer-events-none');
+                document.body.style.overflow = '';
+                btn.setAttribute('aria-expanded', 'false');
+            } else {
+                menu.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+                document.body.style.overflow = 'hidden';
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        function initScrollObserver() {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        // --- Nav scroll-spy: highlights whichever section is passing through the vertical center
+        // of the viewport, so the nav pill always shows where you currently are on the page. ---
+        function initNavSpy() {
+            const navLinks = document.querySelectorAll('#navbar .nav-link');
+            if (!navLinks.length) return;
+
+            const sections = Array.from(navLinks)
+                .map(link => document.querySelector(link.getAttribute('href')))
+                .filter(Boolean);
+            if (!sections.length) return;
+
+            const setActive = (id) => {
+                navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + id));
+            };
+
+            const lastSection = sections[sections.length - 1];
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setActive(entry.target.id);
+                    } else if (entry.target === lastSection && entry.boundingClientRect.top < 0) {
+                        // Scrolled on past the last linked section (Testimonials) into Feedback/Get In
+                        // Touch/the footer, none of which have their own nav link — without this the
+                        // pill just keeps showing Testimonials as "current" for the rest of the page.
+                        navLinks.forEach(link => link.classList.remove('active'));
+                    }
+                });
+            }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+            sections.forEach(section => observer.observe(section));
+        }
+
+        // --- Navbar contrast: inverts to a dark pill whenever something dark is actually behind it —
+        // either a dark-background section (Numbers, Testimonials), or the pinned hero photo itself
+        // showing through before Fleet's own solid background has scrolled up to cover it. The nav sits
+        // at a fixed screen position, so during that early phase it's always over the same (fairly dark)
+        // patch of the fixed image, regardless of scroll — not just "not yet over a dark-section". ---
+        // Shared by the navbar and the footer scroll-car: is whatever's actually behind this screen
+        // Y-position dark? True for the two dark-background sections (Numbers, Testimonials), and also
+        // true near the top of the page before Fleet's solid fill has scrolled up far enough to cover
+        // the pinned hero image (which is fairly dark) at that position.
+        // Queried once, not on every scroll tick — the set of dark sections is static, so re-running
+        // querySelectorAll 120 times a second during a fast flick was pure wasted work.
+        const darkSectionEls = document.querySelectorAll('.dark-section');
+
+        function isScreenYOverDark(y) {
+            const overDarkSection = Array.from(darkSectionEls).some(section => {
+                const r = section.getBoundingClientRect();
+                return r.top <= y && r.bottom >= y;
+            });
+            if (overDarkSection) return true;
+
+            // Fleet is a flat bg-stone-100 section now (the split fade-in-strip layout was reverted),
+            // so the section's own top edge is the point where the pinned image stops being visible.
+            const fleet = document.getElementById('fleet');
+            return fleet ? fleet.getBoundingClientRect().top > y : false;
+        }
+
+        function initNavContrast() {
+            const navbar = document.getElementById('navbar');
+            const scrollCar = document.getElementById('scroll-car-container');
+            if (!navbar && !scrollCar) return;
+
+            const update = () => {
+                if (navbar) {
+                    const r = navbar.getBoundingClientRect();
+                    navbar.classList.toggle('on-dark', isScreenYOverDark(r.top + r.height / 2));
+                }
+                if (scrollCar) {
+                    const r = scrollCar.getBoundingClientRect();
+                    scrollCar.classList.toggle('on-dark', isScreenYOverDark(r.top + r.height / 2));
+                }
+            };
+
+            // rAF-throttled: raw `scroll` events can fire far faster than the screen actually
+            // repaints, especially mid-flick on a phone — running these getBoundingClientRect reads
+            // on every single one of them (uncapped) is exactly what shows up as scroll jank. This
+            // caps the work to once per rendered frame, and coalesces any extra events in between.
+            let ticking = false;
+            const onScroll = () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => { update(); ticking = false; });
+            };
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll, { passive: true });
+            update();
+        }
+
+        // --- Fleet swipe hint: dismisses the animated hand + "Swipe to see more" text the first time
+        // someone actually scrolls or touches the row, and remembers that across visits. ---
+        // --- About Us scrollytelling: each chapter comes into cinematic focus as it crosses the
+        // vertical center of the viewport, and the sticky header's line tracks scroll progress
+        // through the section. ---
+        function initAboutStorytelling() {
+            const storyBlocks = Array.from(document.querySelectorAll('.story-block'));
+            const progressBar = document.getElementById('story-progress');
+
+            // Progress steps in lockstep with the chapters themselves — one step per chapter,
+            // animated over the same duration as the chapter's own fade-in — rather than tracking
+            // raw scroll position, which used to race ahead of the (slower, eased) text reveal.
+            const storyObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    entry.target.classList.toggle('is-active', entry.isIntersecting);
+                });
+                if (progressBar) {
+                    const lastActiveIndex = storyBlocks.reduce((last, block, i) =>
+                        block.classList.contains('is-active') ? i : last, -1);
+                    const progress = lastActiveIndex >= 0 ? ((lastActiveIndex + 1) / storyBlocks.length) * 100 : 0;
+                    progressBar.style.height = progress + '%';
+                }
+            }, { root: null, rootMargin: '-35% 0px -35% 0px', threshold: 0 });
+            storyBlocks.forEach(block => storyObserver.observe(block));
+        }
+
+        // localStorage throws (rather than returning null) when a browser blocks site storage, e.g.
+        // strict privacy settings or some in-app browsers. Without these guards that error would
+        // abort the whole DOMContentLoaded init below and leave the rest of the page uninitialised.
+        function readStorage(key) {
+            try { return localStorage.getItem(key); } catch (e) { return null; }
+        }
+        function writeStorage(key, value) {
+            try { localStorage.setItem(key, value); } catch (e) { /* storage blocked: skip */ }
+        }
+
+        function initSwipeHintDismiss() {
+            const grid = document.getElementById('fleet-grid');
+            const hand = document.getElementById('swipe-hint-hand');
+            const label = document.getElementById('swipe-hint-label');
+            if (!grid || (!hand && !label)) return;
+
+            if (readStorage('fleetSwipeHintSeen') === '1') {
+                if (hand) hand.remove();
+                if (label) label.remove();
+                return;
+            }
+
+            const dismiss = () => {
+                if (hand) hand.classList.add('swipe-hint-dismissed');
+                if (label) label.classList.add('swipe-hint-dismissed');
+                writeStorage('fleetSwipeHintSeen', '1');
+                grid.removeEventListener('scroll', dismiss);
+                grid.removeEventListener('touchstart', dismiss);
+            };
+
+            grid.addEventListener('scroll', dismiss, { passive: true, once: true });
+            grid.addEventListener('touchstart', dismiss, { passive: true, once: true });
+        }
+
+        // --- Scroll-driven car: travels left to right as the page scrolls down ---
+        let lastScrollY = window.scrollY;
+        let carDirection = -1; // Facing right at rest (the SVG's own unflipped state faces left)
+        let wheelRot = 0;
+        let scrollCarTimer = null;
+
+        // Looked up once — these elements are static, so re-querying them (including a
+        // querySelectorAll) on every single scroll tick was extra work this hot path doesn't need.
+        const scrollRoadFillEl = document.getElementById('scroll-road-fill');
+        const scrollCarXEl = document.getElementById('scroll-car-x');
+        const scrollCarSuspensionEl = document.getElementById('scroll-car-suspension');
+        const carWindEl = document.getElementById('car-wind');
+        const carWheelEls = document.querySelectorAll('.car-wheel');
+
+        function updateScrollCar() {
+            const currentScrollY = window.scrollY;
+            const deltaY = currentScrollY - lastScrollY;
+            lastScrollY = currentScrollY;
+
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            if (maxScroll <= 0) return;
+
+            const scrollFraction = Math.max(0, Math.min(1, currentScrollY / maxScroll));
+
+            // 1. Position & Progress Bar: car and road-fill both grow left-to-right with scroll progress.
+            const maxTranslate = window.innerWidth - 48; // 48px is the SVG width
+            const currentX = scrollFraction * maxTranslate;
+
+            scrollRoadFillEl.style.transform = `scaleX(${scrollFraction})`;
+            scrollCarXEl.style.transform = `translate3d(${currentX}px, 0, 0)`;
+
+            // 2. Physics & Direction
+            if (Math.abs(deltaY) > 0.5) {
+                // Prevent micro-jitters on trackpads by requiring a minimum scroll delta to flip direction
+                if (Math.abs(deltaY) > 2) {
+                    // Scrolling down moves the car rightward, so it should face right — but the SVG's own
+                    // unflipped orientation actually faces left (long sloping hood on the left side), so
+                    // "facing right" means the FLIPPED (-1) state, not the default (1) one.
+                    carDirection = deltaY > 0 ? -1 : 1;
+                }
+
+                // Calculate "Suspension Tilt" (Acceleration lean)
+                // ALWAYS negative because scaleX(-1) automatically mirrors the physical lift!
+                const speed = Math.abs(deltaY);
+                const tilt = Math.max(speed * -0.2, -12);
+
+                scrollCarSuspensionEl.style.transform = `scaleX(${carDirection}) rotateZ(${tilt}deg)`;
+
+                // Show wind streaks if moving fast
+                carWindEl.style.opacity = speed > 15 ? '1' : '0';
+
+                // Reset physics when scrolling stops
+                clearTimeout(scrollCarTimer);
+                scrollCarTimer = setTimeout(() => {
+                    scrollCarSuspensionEl.style.transform = `scaleX(${carDirection}) rotateZ(0deg)`;
+                    carWindEl.style.opacity = '0';
+                }, 100);
+            }
+
+            // 3. Wheel Rotation
+            // Add global rotation. By passing scaleX(carDirection) to the child wheel,
+            // we perfectly cancel the parent's flip, fixing the "backward spinning" illusion!
+            wheelRot += deltaY * 1.5;
+            carWheelEls.forEach(wheel => {
+                wheel.style.transform = `scaleX(${carDirection}) rotate(${wheelRot}deg)`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            buildFilters();
+            applyFilters();
+            initScrollObserver();
+            initNavSpy();
+            initNavContrast();
+            initSwipeHintDismiss();
+            initFleetScrollThumb();
+            initAboutStorytelling();
+
+            // Init scroll car animation — rAF-throttled for the same reason as the navbar contrast
+            // listener above: this one is even heavier (a scrollHeight read, several getElementById
+            // + style writes, and a querySelectorAll+loop over every wheel), so running it uncapped
+            // on raw scroll events was likely the single biggest source of the reported scroll jank.
+            let scrollCarTicking = false;
+            const onScrollCar = () => {
+                if (scrollCarTicking) return;
+                scrollCarTicking = true;
+                requestAnimationFrame(() => { updateScrollCar(); scrollCarTicking = false; });
+            };
+            window.addEventListener('scroll', onScrollCar, { passive: true });
+            window.addEventListener('resize', onScrollCar, { passive: true });
+            updateScrollCar();
+
+            // Escape closes whichever overlay is open: video, modal, filter sheet, or mobile nav.
+            document.addEventListener('keydown', (e) => {
+                if (e.key !== 'Escape') return;
+                if (!document.getElementById('testimonial-video-modal').classList.contains('hidden')) closeTestimonialVideo();
+                else if (!document.getElementById('vehicle-modal').classList.contains('hidden')) closeModal();
+                else if (!document.getElementById('filter-sheet').classList.contains('hidden')) closeFilterSheet();
+                else if (!document.getElementById('mobile-menu').classList.contains('invisible')) toggleMobileMenu();
+            });
+        });
+    </script>
+</body>
+</html>

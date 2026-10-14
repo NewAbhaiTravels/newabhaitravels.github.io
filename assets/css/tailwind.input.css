@@ -1,0 +1,4 @@
+/* Source file for Tailwind. The site loads the generated tailwind.css, not this file. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
