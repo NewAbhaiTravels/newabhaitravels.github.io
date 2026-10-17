@@ -3,22 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data:; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <!-- Set before anything renders so the loading screen is up from the very first paint. Shown once
+         per browser session, so coming back from a legal page doesn't replay the intro. Without
+         JavaScript these classes are never added, so the loader stays hidden and the page shows as normal. -->
+    <script>
+        (function () {
+            var seen = false;
+            try { seen = sessionStorage.getItem('natLoaderSeen') === '1'; sessionStorage.setItem('natLoaderSeen', '1'); } catch (e) {}
+            if (!seen) document.documentElement.classList.add('has-loader', 'is-loading');
+        })();
+    </script>
     <title>New Abhai Travels | Curated Journeys</title>
     <meta name="description" content="New Abhai Travels: cars, tempo travellers and buses for every journey, arranged since 2000. Rates confirmed by call or WhatsApp, no online payment.">
-    <meta name="theme-color" content="#F9F9F8">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/favicon-192.png">
-    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Phosphor Icons: a lighter, thinner icon set than most, fits the restrained aesthetic here -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" integrity="sha384-6p9AefaqUhEVheRlj1mpAkbngHXy9mbYMrIdcIt4Jlc9lOLIablJq3bBsLOjGwZ7" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" integrity="sha384-pPVoXE8ft+zxKtxIDDI7SfTK6y95NHm4qa+hKEg/hs8VkjW5IP+9/dGOPCbDpUPl" crossorigin="anonymous">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <!-- Google Fonts: Syne (expressive display) & Inter (clean utilitarian body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Syne"', 'sans-serif'],
+                        body: ['"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        stone: {
+                            50: '#F9F9F8',
+                            100: '#F0EFEA',
+                            900: '#1A1A1A',
+                        }
+                    },
+                    transitionTimingFunction: {
+                        'slow-ease': 'cubic-bezier(0.16, 1, 0.3, 1)',
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
         body {
@@ -224,21 +254,27 @@
         @keyframes cursorTap { 0%, 55% { transform: translateY(0) scale(1); } 63% { transform: translateY(1px) scale(0.85); } 71%, 100% { transform: translateY(0) scale(1); } }
         @keyframes cursorRing { 0%, 55% { opacity: 0; transform: scale(0.6); } 63% { opacity: 0.5; transform: scale(0.9); } 85% { opacity: 0; transform: scale(1.5); } 100% { opacity: 0; } }
 
-        /* About Us scrollytelling: each chapter sits dim/blurred/small until it crosses the vertical
-           center of the viewport (per the IntersectionObserver's -35%/-35% rootMargin), then comes into
-           cinematic focus. The sticky header's progress line fills based on scroll position within the
-           section, tracked in JS. */
+        /* About Us scrollytelling: each chapter starts soft and faded, then eases into focus once
+           it scrolls into the lower part of the viewport, and stays sharp from then on. It used to
+           re-blur whenever a chapter left a narrow band in the middle of the screen, which on
+           shorter windows and phones left most of the text blurred and snapping in and out while
+           scrolling. Only opacity/transform/filter are transitioned (not `all`), over a longer,
+           gentler ease, so the reveal reads as one smooth settle rather than a pop. */
         .story-block {
-            opacity: 0.4;
-            transform: translateY(40px) scale(0.95);
-            filter: blur(4px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            transform-origin: left center;
+            opacity: 0;
+            transform: translateY(32px);
+            filter: blur(6px);
+            transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1), transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), filter 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: opacity, transform, filter;
         }
         .story-block.is-active {
             opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
+            transform: none;
+            filter: none;
+            will-change: auto;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .story-block { opacity: 1; transform: none; filter: none; }
         }
         .scroll-progress-track {
             position: absolute;
@@ -347,6 +383,44 @@
             outline-offset: 3px;
         }
 
+        /* Loading screen (markup at the top of <body>, timing in the script at the end). Plain CSS
+           rather than Tailwind classes, because it has to be styled before the Tailwind CDN has run. */
+        .page-loader {
+            position: fixed; inset: 0; z-index: 200;
+            display: none; align-items: center; justify-content: center;
+            background: #F9F9F8;
+            transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+            will-change: transform;
+        }
+        html.has-loader .page-loader { display: flex; }
+        html.loaded .page-loader { transform: translateY(-100%); }
+        .page-loader__inner {
+            display: flex; flex-direction: column; align-items: center; gap: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+            transition: opacity 0.45s ease, transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+        html.loaded .page-loader__inner { opacity: 0; transform: translateY(-48px); }
+        .page-loader__logo {
+            display: block; width: clamp(150px, 120px + 10vw, 220px); height: auto;
+            clip-path: inset(0 100% 0 0);
+            animation: loaderWipe 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.1s forwards;
+        }
+        .page-loader__name {
+            display: flex; gap: 0.6em; overflow: hidden; margin: 0;
+            font-family: 'Syne', sans-serif; font-weight: 700; text-transform: uppercase;
+            font-size: clamp(0.7rem, 0.6rem + 0.45vw, 0.9rem); letter-spacing: 0.35em; color: #1A1A1A;
+        }
+        .page-loader__name span { display: inline-block; transform: translateY(110%); animation: loaderRise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .page-loader__name span:nth-child(1) { animation-delay: 0.55s; }
+        .page-loader__name span:nth-child(2) { animation-delay: 0.65s; }
+        .page-loader__name span:nth-child(3) { animation-delay: 0.75s; }
+        .page-loader__bar { width: clamp(120px, 100px + 6vw, 170px); height: 2px; background: #E7E5E4; border-radius: 2px; overflow: hidden; }
+        .page-loader__bar span { display: block; height: 100%; background: #F2A33A; transform: scaleX(0); transform-origin: left; animation: loaderBar 1.3s cubic-bezier(0.65, 0, 0.35, 1) 0.2s forwards; }
+        @keyframes loaderWipe { to { clip-path: inset(0 0 0 0); } }
+        @keyframes loaderRise { to { transform: translateY(0); } }
+        @keyframes loaderBar { to { transform: scaleX(1); } }
+        /* Hold the hero's own entrance until the loader starts lifting, so it plays where it can be seen. */
+        html.is-loading .hero-fade-up, html.is-loading .reveal-img { animation-play-state: paused; }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
             .reveal { opacity: 1 !important; transform: none !important; }
@@ -372,10 +446,19 @@
       "foundingDate": "2000"
     }
     </script>
-    <!-- Tailwind CSS, pre-built. To regenerate after adding new classes, see README > "Editing the design". -->
-    <link rel="stylesheet" href="assets/css/tailwind.css">
 </head>
 <body class="font-body selection:bg-stone-900 selection:text-white">
+
+    <!-- Loading screen: the NAT logo wipes in left to right (following the road in the mark), the
+         name rises in word by word, and an orange line fills beneath. Once the page has loaded (and the
+         intro has had time to play) the whole screen slides up and the hero animates in behind it. -->
+    <div id="page-loader" class="page-loader" role="status" aria-label="Loading New Abhai Travels">
+        <div class="page-loader__inner">
+            <img src="natlogo-trimmed.png" alt="" width="507" height="200" class="page-loader__logo">
+            <p class="page-loader__name" aria-hidden="true"><span>New</span><span>Abhai</span><span>Travels</span></p>
+            <div class="page-loader__bar" aria-hidden="true"><span></span></div>
+        </div>
+    </div>
 
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-stone-900 focus:text-stone-50 focus:px-4 focus:py-2 focus:rounded-xl focus:text-sm focus:font-medium">Skip to content</a>
 
@@ -389,8 +472,8 @@
 
     <nav class="fixed top-4 md:top-6 inset-x-4 md:inset-x-8 z-50 mx-auto max-w-4xl bg-stone-100/70 backdrop-blur-md backdrop-saturate-150 rounded-xl shadow-lg shadow-stone-900/10 flex items-center justify-between gap-3 pl-2 pr-2.5 py-2 md:pl-3 md:pr-3 md:py-2.5" id="navbar">
         <a href="#" class="flex items-center gap-2 shrink-0">
-            <img src="assets/images/logo.png" alt="New Abhai Travels" class="nav-logo-light h-8 w-auto shrink-0">
-            <img src="assets/images/logo-white.png" alt="New Abhai Travels" class="nav-logo-dark h-8 w-auto shrink-0">
+            <img src="natlogo-trimmed.png" alt="New Abhai Travels" class="nav-logo-light h-8 w-auto shrink-0">
+            <img src="natlogo-trimmed-dark.png" alt="New Abhai Travels" class="nav-logo-dark h-8 w-auto shrink-0">
         </a>
 
         <div class="hidden md:flex items-center gap-1 text-sm font-medium text-stone-500 mx-auto">
@@ -434,7 +517,7 @@
          section's own leading edge instead (see below), so it travels with the scroll rather than
          sitting static while the boundary it's supposed to soften moves past it. -->
     <div class="fixed z-[-2] overflow-hidden hero-img-wrap" aria-hidden="true">
-        <img src="assets/images/hero.jpg" alt="" class="w-full h-full object-cover object-center editorial-img reveal-img" width="2400" height="1600">
+        <img src="herofinal.jpg" alt="" class="w-full h-full object-cover object-center editorial-img reveal-img" width="2400" height="1600">
     </div>
 
     <main id="main">
@@ -477,11 +560,6 @@
                             <div>
                                 <p class="font-display text-2xl md:text-3xl font-bold text-stone-900 leading-none tabular-nums">25+</p>
                                 <p class="text-[9px] md:text-[10px] tracking-widest uppercase text-stone-500 mt-1">Years</p>
-                            </div>
-                            <div class="w-px h-8 bg-stone-900/15" aria-hidden="true"></div>
-                            <div>
-                                <p class="font-display text-2xl md:text-3xl font-bold text-stone-900 leading-none tabular-nums">24/7</p>
-                                <p class="text-[9px] md:text-[10px] tracking-widest uppercase text-stone-500 mt-1">Support</p>
                             </div>
                             <div class="w-px h-8 bg-stone-900/15 hidden lg:block" aria-hidden="true"></div>
                             <div class="hidden lg:block">
@@ -555,7 +633,7 @@
                     </button>
                 </div>
 
-                <p id="empty-state" class="hidden text-stone-500 font-light pb-6">No listed vehicle matches that filter &mdash; but tell us what you need below and we'll see what we can arrange.</p>
+                <p id="empty-state" class="hidden text-stone-500 font-light pb-6">No listed vehicle matches that filter, but tell us what you need below and we'll see what we can arrange.</p>
 
                 <div class="relative">
                     <div id="fleet-grid" class="fleet-grid" aria-live="polite"></div>
@@ -645,7 +723,7 @@
                         <div class="relative w-full sm:w-[190px] mx-auto sm:mx-0 shrink-0">
                             <div class="bg-white border border-stone-200 rounded-lg overflow-hidden shadow-lg">
                                 <div class="relative aspect-[4/3] bg-stone-200 overflow-hidden">
-                                    <img src="assets/images/fleet/innova-crysta/1.jpg" alt="Sample fleet card for the Toyota Innova Crysta" loading="lazy" decoding="async" width="480" height="360" class="w-full h-full object-cover editorial-img">
+                                    <img src="Crysta/1.jpg" alt="Sample fleet card for the Toyota Innova Crysta" loading="lazy" decoding="async" width="480" height="360" class="w-full h-full object-cover editorial-img">
                                     <span class="absolute top-2 left-2 bg-amber-400 text-stone-900 text-[9px] font-bold tracking-wide uppercase px-2 py-0.5 rounded-md">★ Popular</span>
                                 </div>
                                 <div class="p-3">
@@ -766,11 +844,11 @@
                         <div class="text-3xl md:text-5xl font-black text-stone-300 mb-4 tracking-tighter">03</div>
                         <h3 class="text-xl md:text-2xl font-bold tracking-tight text-stone-900 mb-4">The Standard Today</h3>
                         <p class="text-stone-600 font-light text-base md:text-lg leading-relaxed max-w-[62ch]">
-                            Over two decades later, the name New Abhai stands as a benchmark for trust. With 24/7 dedicated support, rigorous maintenance protocols, and chauffeurs who master the roads, we don't just rent vehicles: we guarantee absolute peace of mind on every journey.
+                            Over two decades later, the name New Abhai stands as a benchmark for trust. With dedicated support, rigorous maintenance protocols, and chauffeurs who master the roads, we don't just rent vehicles: we guarantee absolute peace of mind on every journey.
                         </p>
                     </div>
 
-                    <!-- Chapter 4: Office photos, from assets/images/office/ (4 photos). Each is a different native
+                    <!-- Chapter 4: Office photos, from office/ (4 photos). Each is a different native
                          aspect ratio, but the shared aspect-[4/5] + object-cover keeps the grid
                          locked to one uniform shape regardless of source dimensions. 2 columns on
                          mobile (a clean 2x2) widening to a single row of 4 from md up. -->
@@ -785,10 +863,10 @@
                             <span>111-A/5, Ashok Nagar, Hotel Bliss Building, G.T. Road, Kanpur</span>
                         </a>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <img src="assets/images/office/1.jpg" alt="New Abhai Travels office, view 1" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
-                            <img src="assets/images/office/2.jpg" alt="New Abhai Travels office, view 2" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
-                            <img src="assets/images/office/3.jpg" alt="New Abhai Travels office, view 3" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
-                            <img src="assets/images/office/4.jpg" alt="New Abhai Travels office, view 4" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
+                            <img src="office/1.jpg" alt="New Abhai Travels office, view 1" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
+                            <img src="office/2.jpg" alt="New Abhai Travels office, view 2" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
+                            <img src="office/3.jpg" alt="New Abhai Travels office, view 3" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
+                            <img src="office/4.jpg" alt="New Abhai Travels office, view 4" loading="lazy" decoding="async" width="400" height="500" class="w-full aspect-[4/5] object-cover rounded-md editorial-img">
                         </div>
                     </div>
 
@@ -802,13 +880,13 @@
                 <h2 class="font-display text-xs tracking-widest uppercase text-stone-400 mb-16 reveal">( 04. Testimonials &amp; FAQ )</h2>
 
                 <!-- Video testimonials: tap a thumbnail to play the customer's own clip in the modal below.
-                     Two real reviews are available so far (assets/videos/review-1.mp4, review-2.mp4) — add a third
+                     Two real reviews are available so far (Review-VDO/1.mov, 2.mov) — add a third
                      `<button>` here plus a matching entry in testimonialVideos when one arrives. No
                      fabricated customer names are attached to real footage; swap in real names/vehicle
                      labels once known. -->
                 <div class="grid grid-cols-2 gap-3 md:gap-6 max-w-md mx-auto">
                     <button type="button" onclick="openTestimonialVideo('review1')" aria-label="Play customer video review 1" class="group relative aspect-[9/16] rounded-lg overflow-hidden bg-stone-800 text-left reveal reveal-delay-1">
-                        <img src="assets/videos/review-1-poster.jpg" alt="" loading="lazy" decoding="async" width="478" height="850" class="w-full h-full object-cover editorial-img opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500">
+                        <img src="Review-VDO/1-poster.jpg" alt="" loading="lazy" decoding="async" width="478" height="850" class="w-full h-full object-cover editorial-img opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500">
                         <span class="absolute inset-0 flex items-center justify-center">
                             <span class="w-11 h-11 md:w-14 md:h-14 rounded-full bg-stone-50 text-stone-900 flex items-center justify-center text-lg md:text-2xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-play"></i></span>
                         </span>
@@ -817,7 +895,7 @@
                         </span>
                     </button>
                     <button type="button" onclick="openTestimonialVideo('review2')" aria-label="Play customer video review 2" class="group relative aspect-[9/16] rounded-lg overflow-hidden bg-stone-800 text-left reveal reveal-delay-2">
-                        <img src="assets/videos/review-2-poster.jpg" alt="" loading="lazy" decoding="async" width="464" height="832" class="w-full h-full object-cover editorial-img opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500">
+                        <img src="Review-VDO/2-poster.jpg" alt="" loading="lazy" decoding="async" width="464" height="832" class="w-full h-full object-cover editorial-img opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500">
                         <span class="absolute inset-0 flex items-center justify-center">
                             <span class="w-11 h-11 md:w-14 md:h-14 rounded-full bg-stone-50 text-stone-900 flex items-center justify-center text-lg md:text-2xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-play"></i></span>
                         </span>
@@ -828,22 +906,38 @@
                 </div>
                 <p class="text-xs text-stone-500 mt-8 reveal">Tap a video to hear it from our customers.</p>
 
-                <!-- Written reviews. minmax(min(100%, 260px), 1fr) lets the cards drop to one column on
-                     narrow screens (and at 400% zoom) without overflowing, no breakpoint needed. -->
-                <div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,260px),1fr))] gap-6 max-w-3xl mx-auto mt-20 text-left">
-                    <figure class="border border-stone-50/15 rounded-xl p-6 md:p-8 reveal reveal-delay-1">
-                        <div class="flex gap-1 text-stone-300 mb-4" role="img" aria-label="Rated 5 out of 5">
-                            <i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i>
-                        </div>
-                        <blockquote class="text-stone-200 font-light leading-relaxed mb-6">“Very good service. The car was clean, the driver was polite and he reached on time. Booking on WhatsApp was quick and easy. Highly recommended!”</blockquote>
-                        <figcaption class="font-display text-sm tracking-widest uppercase text-stone-400">Rahul Malhotra</figcaption>
+                <!-- Written reviews, as received from customers via the client (wording kept as sent;
+                     only the all-caps business name normalised to title case). Add new ones as
+                     another <figure> in this grid. -->
+                <h3 class="font-display text-xs tracking-widest uppercase text-stone-400 mt-24 mb-10 reveal">What Our Customers Say</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 text-left">
+                    <figure class="flex flex-col border border-stone-50/15 bg-stone-50/[0.04] rounded-lg p-6 md:p-8 reveal reveal-delay-1">
+                        <i class="ph-fill ph-quotes text-2xl text-amber-400 mb-4" aria-hidden="true"></i>
+                        <blockquote class="text-stone-300 font-light leading-relaxed flex-1">
+                            <p>Had a wonderful experience with New Abhai Travels. The service was professional, the vehicle was clean and comfortable, and the driver was polite and punctual. Everything was well managed from booking to the end of the journey. Highly recommended for family, corporate, and outstation travel.</p>
+                        </blockquote>
+                        <figcaption class="mt-6 pt-4 border-t border-stone-50/10 text-sm font-medium text-stone-50">Rajveer Singh</figcaption>
                     </figure>
-                    <figure class="border border-stone-50/15 rounded-xl p-6 md:p-8 reveal reveal-delay-2">
-                        <div class="flex gap-1 text-stone-300 mb-4" role="img" aria-label="Rated 5 out of 5">
-                            <i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i><i class="ph-fill ph-star" aria-hidden="true"></i>
-                        </div>
-                        <blockquote class="text-stone-200 font-light leading-relaxed mb-6">“We took a Tempo Traveller for a family trip and everything went smoothly. Comfortable vehicle, experienced driver and fair rates. We will book again.”</blockquote>
-                        <figcaption class="font-display text-sm tracking-widest uppercase text-stone-400">Arjun Mehra</figcaption>
+                    <figure class="flex flex-col border border-stone-50/15 bg-stone-50/[0.04] rounded-lg p-6 md:p-8 reveal reveal-delay-2">
+                        <i class="ph-fill ph-quotes text-2xl text-amber-400 mb-4" aria-hidden="true"></i>
+                        <blockquote class="text-stone-300 font-light leading-relaxed flex-1">
+                            <p>Very good experience with New Abhai Travels. Booking was easy, the vehicle arrived on time, and the driver was cooperative throughout the journey. Great service for family and outstation travel.</p>
+                        </blockquote>
+                        <figcaption class="mt-6 pt-4 border-t border-stone-50/10 text-sm font-medium text-stone-50">Amit Verma</figcaption>
+                    </figure>
+                    <figure class="flex flex-col border border-stone-50/15 bg-stone-50/[0.04] rounded-lg p-6 md:p-8 reveal reveal-delay-1">
+                        <i class="ph-fill ph-quotes text-2xl text-amber-400 mb-4" aria-hidden="true"></i>
+                        <blockquote class="text-stone-300 font-light leading-relaxed flex-1">
+                            <p>Really satisfied with New Abhai Travels. From booking to the end of the trip, everything was handled professionally. Comfortable journey, reliable service, and a friendly driver. Would definitely book again!</p>
+                        </blockquote>
+                        <figcaption class="mt-6 pt-4 border-t border-stone-50/10 text-sm font-medium text-stone-50">Saurabh Gupta</figcaption>
+                    </figure>
+                    <figure class="flex flex-col border border-stone-50/15 bg-stone-50/[0.04] rounded-lg p-6 md:p-8 reveal reveal-delay-2">
+                        <i class="ph-fill ph-quotes text-2xl text-amber-400 mb-4" aria-hidden="true"></i>
+                        <blockquote class="text-stone-300 font-light leading-relaxed flex-1">
+                            <p>Had a wonderful travel experience with New Abhai Travels. The vehicle was in good condition and the journey was comfortable. Everything was managed properly and professionally.</p>
+                        </blockquote>
+                        <figcaption class="mt-6 pt-4 border-t border-stone-50/10 text-sm font-medium text-stone-50">Ankit Mishra</figcaption>
                     </figure>
                 </div>
             </div>
@@ -873,7 +967,7 @@
                             <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
                             <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
                         </summary>
-                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Yes — self-drive isn't available. Every vehicle, from cars to buses, comes with a professional driver as part of the service.</p>
+                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Yes. Self-drive isn't available. Every vehicle, from cars to buses, comes with a professional driver as part of the service.</p>
                     </details>
                     <details class="group border-b border-stone-50/15 pb-6 reveal reveal-delay-2">
                         <summary class="font-display text-xl flex justify-between items-center gap-4 transition-colors hover:text-stone-300">
@@ -881,7 +975,7 @@
                             <i class="ph ph-plus acc-plus text-stone-400 shrink-0"></i>
                             <i class="ph ph-minus acc-minus text-stone-400 shrink-0"></i>
                         </summary>
-                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Fuel is included in the agreed rental fare, and the vehicle is handed over with a reasonable fuel level for the booked trip — nothing to arrange yourself. Extra kilometres, detours, or trips beyond the agreed package, along with tolls, parking, and other statutory charges, are billed separately as per the confirmed terms.</p>
+                        <p class="mt-4 text-stone-400 font-light leading-relaxed pr-8">Fuel is included in the agreed rental fare, and the vehicle is handed over with a reasonable fuel level for the booked trip, so there's nothing to arrange yourself. Extra kilometres, detours, or trips beyond the agreed package, along with tolls, parking, and other statutory charges, are billed separately as per the confirmed terms.</p>
                     </details>
                     <details class="group border-b border-stone-50/15 pb-6 reveal reveal-delay-3">
                         <summary class="font-display text-xl flex justify-between items-center gap-4 transition-colors hover:text-stone-300">
@@ -912,7 +1006,7 @@
 
                 <div class="inline-flex flex-col sm:flex-row items-center gap-6 sm:gap-8 bg-white border border-stone-200 rounded-xl px-8 md:px-12 py-10 reveal reveal-delay-2">
                     <div class="flex flex-col items-center gap-3">
-                        <img src="assets/images/qr-code.png" width="160" height="160" loading="lazy" decoding="async" alt="QR code linking to the review form" class="editorial-img rounded-lg">
+                        <img src="qr-code.png" width="160" height="160" loading="lazy" decoding="async" alt="QR code linking to the review form" class="editorial-img rounded-lg">
                         <p class="text-[10px] tracking-widest uppercase text-stone-400">Scan to Review</p>
                     </div>
 
@@ -1163,12 +1257,12 @@
     <script>
         // --- Real fleet data ---
         const carData = [
-            { id: 'c1', category: 'car', type: 'mpv', name: 'Toyota Innova Crysta', label: 'MPV', seats: 7, trans: 'Manual', ac: true, fuel: 'Diesel', isPopular: true, images: ['assets/images/fleet/innova-crysta/1.jpg', 'assets/images/fleet/innova-crysta/2.jpg', 'assets/images/fleet/innova-crysta/3.jpg', 'assets/images/fleet/innova-crysta/4.jpg', 'assets/images/fleet/innova-crysta/5.jpg'] },
-            { id: 'c2', category: 'car', type: 'sedan', name: 'Maruti Dzire', label: 'Sedan', seats: 4, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['assets/images/fleet/dzire/25.jpg', 'assets/images/fleet/dzire/26.jpg', 'assets/images/fleet/dzire/27.jpg', 'assets/images/fleet/dzire/28.jpg'] },
-            { id: 'c3', category: 'car', type: 'hatchback', name: 'Maruti WagonR', label: 'Hatchback', seats: 3, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['assets/images/fleet/wagonr/51.jpg', 'assets/images/fleet/wagonr/51.jpg', 'assets/images/fleet/wagonr/50.jpg', 'assets/images/fleet/wagonr/52.jpg'] },
-            { id: 'c4', category: 'car', type: 'mpv', name: 'Maruti Ertiga', label: 'MPV', seats: 6, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['assets/images/fleet/ertiga/20.jpg', 'assets/images/fleet/ertiga/21.jpg', 'assets/images/fleet/ertiga/22.jpg', 'assets/images/fleet/ertiga/23.jpg', 'assets/images/fleet/ertiga/24.jpg'] },
-            { id: 'c5', category: 'car', type: 'suv', name: 'Toyota Fortuner', label: 'SUV', seats: 7, trans: 'Automatic', ac: true, fuel: 'Diesel', isPopular: true, images: ['assets/images/fleet/fortuner/44.jpg', 'assets/images/fleet/fortuner/44.jpg', 'assets/images/fleet/fortuner/42.jpg', 'assets/images/fleet/fortuner/43.jpg', 'assets/images/fleet/fortuner/45.jpg'] },
-            { id: 'c6', category: 'car', type: 'suv', name: 'Mahindra XUV300', label: 'SUV', seats: 5, trans: 'Manual', ac: true, fuel: 'Petrol', isPopular: false, images: ['assets/images/fleet/xuv300/47.jpg', 'assets/images/fleet/xuv300/47.jpg', 'assets/images/fleet/xuv300/46.jpg', 'assets/images/fleet/xuv300/48.jpg'] },
+            { id: 'c1', category: 'car', type: 'mpv', name: 'Toyota Innova Crysta', label: 'MPV', seats: 7, trans: 'Manual', ac: true, fuel: 'Diesel', isPopular: true, images: ['Crysta/1.jpg', 'Crysta/2.jpg', 'Crysta/3.jpg', 'Crysta/4.jpg', 'Crysta/5.jpg'] },
+            { id: 'c2', category: 'car', type: 'sedan', name: 'Maruti Dzire', label: 'Sedan', seats: 4, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['DZIRE/25.jpg', 'DZIRE/26.jpg', 'DZIRE/27.jpg', 'DZIRE/28.jpg'] },
+            { id: 'c3', category: 'car', type: 'hatchback', name: 'Maruti WagonR', label: 'Hatchback', seats: 3, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['wagonr-2/51.jpg', 'wagonr-2/51.jpg', 'wagonr-2/50.jpg', 'wagonr-2/52.jpg'] },
+            { id: 'c4', category: 'car', type: 'mpv', name: 'Maruti Ertiga', label: 'MPV', seats: 6, trans: 'Manual', ac: true, fuel: 'CNG', isPopular: false, images: ['Ertiga/20.jpg', 'Ertiga/21.jpg', 'Ertiga/22.jpg', 'Ertiga/23.jpg', 'Ertiga/24.jpg'] },
+            { id: 'c5', category: 'car', type: 'suv', name: 'Toyota Fortuner', label: 'SUV', seats: 7, trans: 'Automatic', ac: true, fuel: 'Diesel', isPopular: true, images: ['fortuner-2/44.jpg', 'fortuner-2/44.jpg', 'fortuner-2/42.jpg', 'fortuner-2/43.jpg', 'fortuner-2/45.jpg'] },
+            { id: 'c6', category: 'car', type: 'suv', name: 'Mahindra XUV300', label: 'SUV', seats: 5, trans: 'Manual', ac: true, fuel: 'Petrol', isPopular: false, images: ['xuv300-3/47.jpg', 'xuv300-3/47.jpg', 'xuv300-3/46.jpg', 'xuv300-3/48.jpg'] },
         ];
 
         // Shared by every Tempo Traveller card/modal below — same amenities across all three seat
@@ -1191,16 +1285,16 @@
         // Bus stays a single combined card below: fewer real distinguishing details between the three
         // sizes, and no dedicated photos yet, so a seat-picker inside one card fits better there.
         const busData = [
-            { id: 'b1', category: 'bus', type: 'traveller', name: 'Tempo Traveller (17 Seater)', label: 'Tempo Traveller', seats: 17, ac: true, idealFor: 'TV, recliners & mood lighting', isPopular: false, images: ['assets/images/fleet/tempo-traveller-17/61.jpg', 'assets/images/fleet/tempo-traveller-17/61.jpg', 'assets/images/fleet/tempo-traveller-17/62.jpg', 'assets/images/fleet/tempo-traveller-17/63.jpg'], features: TEMPO_FEATURES },
-            { id: 'b2', category: 'bus', type: 'traveller', name: 'Tempo Traveller (21 Seater, Our Special)', label: 'Tempo Traveller', seats: 21, ac: true, idealFor: 'Our most requested configuration', isPopular: true, images: ['assets/images/fleet/tempo-traveller-21/58.jpg', 'assets/images/fleet/tempo-traveller-21/58.jpg', 'assets/images/fleet/tempo-traveller-21/56.jpg', 'assets/images/fleet/tempo-traveller-21/57.jpg', 'assets/images/fleet/tempo-traveller-21/59.jpg', 'assets/images/fleet/tempo-traveller-21/60.jpg'], features: TEMPO_FEATURES },
-            { id: 'b3', category: 'bus', type: 'traveller', name: 'Tempo Traveller (26 Seater)', label: 'Tempo Traveller', seats: 26, ac: true, idealFor: 'TV, recliners, curtains & lighting', isPopular: false, images: ['assets/images/fleet/tempo-traveller-26/66.jpg', 'assets/images/fleet/tempo-traveller-26/66.jpg', 'assets/images/fleet/tempo-traveller-26/67.jpg', 'assets/images/fleet/tempo-traveller-26/68.jpg'], features: TEMPO_FEATURES },
+            { id: 'b1', category: 'bus', type: 'traveller', name: 'Tempo Traveller (17 Seater)', label: 'Tempo Traveller', seats: 17, ac: true, idealFor: 'TV, recliners & mood lighting', isPopular: false, images: ['tempo17-2/61.jpg', 'tempo17-2/61.jpg', 'tempo17-2/62.jpg', 'tempo17-2/63.jpg'], features: TEMPO_FEATURES },
+            { id: 'b2', category: 'bus', type: 'traveller', name: 'Tempo Traveller (21 Seater, Our Special)', label: 'Tempo Traveller', seats: 21, ac: true, idealFor: 'Our most requested configuration', isPopular: true, images: ['tempo21-2/58.jpg', 'tempo21-2/58.jpg', 'tempo21-2/56.jpg', 'tempo21-2/57.jpg', 'tempo21-2/59.jpg', 'tempo21-2/60.jpg'], features: TEMPO_FEATURES },
+            { id: 'b3', category: 'bus', type: 'traveller', name: 'Tempo Traveller (26 Seater)', label: 'Tempo Traveller', seats: 26, ac: true, idealFor: 'TV, recliners, curtains & lighting', isPopular: false, images: ['tempo26-2/66.jpg', 'tempo26-2/66.jpg', 'tempo26-2/67.jpg', 'tempo26-2/68.jpg'], features: TEMPO_FEATURES },
             {
                 id: 'b4', category: 'bus', type: 'coach', name: 'Bus', label: 'Bus', ac: true, isPopular: false,
-                images: ['assets/images/fleet/bus/54.jpg', 'assets/images/fleet/bus/54.jpg', 'assets/images/fleet/bus/52.jpg', 'assets/images/fleet/bus/53.jpg', 'assets/images/fleet/bus/55.jpg'],
+                images: ['bus/54.jpg', 'bus/54.jpg', 'bus/52.jpg', 'bus/53.jpg', 'bus/55.jpg'],
                 variants: [
-                    { seats: 45, idealFor: 'School & college trips' },
-                    { seats: 55, idealFor: 'Corporate events & tours' },
-                    { seats: 60, idealFor: 'Large-scale group events' },
+                    { seats: 45, idealFor: 'School & college trips', image: 'https://placehold.co/800x600/1A1A1A/F9F9F8?text=Bus+45-Seater' },
+                    { seats: 55, idealFor: 'Corporate events & tours', image: 'https://placehold.co/800x600/1A1A1A/F9F9F8?text=Bus+55-Seater' },
+                    { seats: 60, idealFor: 'Large-scale group events', image: 'https://placehold.co/800x600/1A1A1A/F9F9F8?text=Bus+60-Seater' },
                 ]
             },
         ];
@@ -1254,8 +1348,8 @@
         // --- Video testimonials: add another `key: { src }` entry here (and a matching button above)
         // once a third review comes in. `poster` is optional — omit it for clips with no still frame.
         const testimonialVideos = {
-            review1: { src: 'assets/videos/review-1.mp4', poster: 'assets/videos/review-1-poster.jpg' },
-            review2: { src: 'assets/videos/review-2.mp4', poster: 'assets/videos/review-2-poster.jpg' },
+            review1: { src: 'Review-VDO/1.mov', poster: 'Review-VDO/1-poster.jpg' },
+            review2: { src: 'Review-VDO/2.mov', poster: 'Review-VDO/2-poster.jpg' },
         };
 
         function openTestimonialVideo(key) {
@@ -1897,31 +1991,34 @@
             const storyBlocks = Array.from(document.querySelectorAll('.story-block'));
             const progressBar = document.getElementById('story-progress');
 
-            // Progress steps in lockstep with the chapters themselves — one step per chapter,
-            // animated over the same duration as the chapter's own fade-in — rather than tracking
-            // raw scroll position, which used to race ahead of the (slower, eased) text reveal.
+            // Reveal is one-way: a chapter comes into focus once its top passes 85% of the
+            // viewport height, then is left alone, so text is never re-blurred while being read.
             const storyObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    entry.target.classList.toggle('is-active', entry.isIntersecting);
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('is-active');
+                    storyObserver.unobserve(entry.target);
                 });
-                if (progressBar) {
-                    const lastActiveIndex = storyBlocks.reduce((last, block, i) =>
-                        block.classList.contains('is-active') ? i : last, -1);
-                    const progress = lastActiveIndex >= 0 ? ((lastActiveIndex + 1) / storyBlocks.length) * 100 : 0;
-                    progressBar.style.height = progress + '%';
-                }
-            }, { root: null, rootMargin: '-35% 0px -35% 0px', threshold: 0 });
+            }, { root: null, rootMargin: '0px 0px -15% 0px', threshold: 0 });
             storyBlocks.forEach(block => storyObserver.observe(block));
-        }
 
-        // localStorage throws (rather than returning null) when a browser blocks site storage, e.g.
-        // strict privacy settings or some in-app browsers. Without these guards that error would
-        // abort the whole DOMContentLoaded init below and leave the rest of the page uninitialised.
-        function readStorage(key) {
-            try { return localStorage.getItem(key); } catch (e) { return null; }
-        }
-        function writeStorage(key, value) {
-            try { localStorage.setItem(key, value); } catch (e) { /* storage blocked: skip */ }
+            // Progress line steps one chapter at a time (animated over the same duration as the
+            // reveal) based on how many chapters have reached the middle of the screen — tracked
+            // separately from the reveal so it still goes back down when scrolling up.
+            if (!progressBar) return;
+            let ticking = false;
+            const updateProgress = () => {
+                ticking = false;
+                const mid = window.innerHeight * 0.5;
+                const reached = storyBlocks.filter(block => block.getBoundingClientRect().top < mid).length;
+                progressBar.style.height = (reached / storyBlocks.length) * 100 + '%';
+            };
+            window.addEventListener('scroll', () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(updateProgress);
+            }, { passive: true });
+            updateProgress();
         }
 
         function initSwipeHintDismiss() {
@@ -1930,7 +2027,11 @@
             const label = document.getElementById('swipe-hint-label');
             if (!grid || (!hand && !label)) return;
 
-            if (readStorage('fleetSwipeHintSeen') === '1') {
+            // Storage can be unavailable or throw (blocked site data, some private modes) — that
+            // must never stop the rest of the page's setup, so both reads and writes are guarded.
+            let seen = false;
+            try { seen = localStorage.getItem('fleetSwipeHintSeen') === '1'; } catch (e) {}
+            if (seen) {
                 if (hand) hand.remove();
                 if (label) label.remove();
                 return;
@@ -1939,7 +2040,7 @@
             const dismiss = () => {
                 if (hand) hand.classList.add('swipe-hint-dismissed');
                 if (label) label.classList.add('swipe-hint-dismissed');
-                writeStorage('fleetSwipeHintSeen', '1');
+                try { localStorage.setItem('fleetSwipeHintSeen', '1'); } catch (e) {}
                 grid.removeEventListener('scroll', dismiss);
                 grid.removeEventListener('touchstart', dismiss);
             };
@@ -2049,6 +2150,43 @@
                 else if (!document.getElementById('mobile-menu').classList.contains('invisible')) toggleMobileMenu();
             });
         });
+    </script>
+
+    <script>
+        // Loading screen timing: lift it once the page has fully loaded, but not before the intro
+        // (logo wipe, name, line) has had time to finish, and never later than MAX_MS, so a slow
+        // image can't hold the visitor on the loader. Reduced-motion visitors skip the wait.
+        (function () {
+            const root = document.documentElement;
+            const loader = document.getElementById('page-loader');
+            if (!loader) return;
+            // Already shown earlier this session: the head script skipped it, so just drop it.
+            if (!root.classList.contains('has-loader')) { loader.remove(); return; }
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const MIN_MS = reduceMotion ? 0 : 1600;
+            const MAX_MS = 5000;
+            const start = performance.now();
+            let lifted = false;
+
+            function lift() {
+                if (lifted) return;
+                lifted = true;
+                const wait = Math.max(0, MIN_MS - (performance.now() - start));
+                setTimeout(() => {
+                    root.classList.add('loaded');
+                    root.classList.remove('is-loading');
+                    // Once it has slid away, take it out of the page entirely.
+                    setTimeout(() => {
+                        loader.remove();
+                        root.classList.remove('has-loader', 'loaded');
+                    }, reduceMotion ? 0 : 1000);
+                }, wait);
+            }
+
+            if (document.readyState === 'complete') lift();
+            else window.addEventListener('load', lift);
+            setTimeout(lift, MAX_MS);
+        })();
     </script>
 </body>
 </html>
