@@ -3,16 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Set before anything renders so the loading screen is up from the very first paint. Shown once
-         per browser session, so coming back from a legal page doesn't replay the intro. Without
-         JavaScript these classes are never added, so the loader stays hidden and the page shows as normal. -->
+    <!-- Set before anything renders. `has-loader`/`is-loading` put the loading screen up from the very
+         first paint on a fresh visit or a reload, but not when arriving from another page of this site
+         (e.g. "Back to Home" on a legal page) or via the back button, so the intro doesn't replay
+         mid-browse. `hero-img-pending` keeps the hero photo hidden until it has fully downloaded (see the
+         script right after it). Without JavaScript none of these are added and the page shows as normal. -->
     <script>
         (function () {
-            var seen = false;
-            try { seen = sessionStorage.getItem('natLoaderSeen') === '1'; sessionStorage.setItem('natLoaderSeen', '1'); } catch (e) {}
-            if (!seen) document.documentElement.classList.add('has-loader', 'is-loading');
+            var root = document.documentElement;
+            var skipLoader = false;
+            try {
+                var nav = performance.getEntriesByType('navigation')[0];
+                var type = nav ? nav.type : 'navigate';
+                if (type === 'back_forward') skipLoader = true;
+                else if (type !== 'reload' && document.referrer) skipLoader = new URL(document.referrer).origin === location.origin;
+            } catch (e) {}
+            root.classList.add('hero-img-pending');
+            if (!skipLoader) root.classList.add('has-loader', 'is-loading');
         })();
     </script>
+    <!-- Start the hero photo downloading straight away, before the stylesheets and scripts below. -->
+    <link rel="preload" as="image" href="assets/images/hero.jpg" fetchpriority="high">
     <title>New Abhai Travels | Curated Journeys</title>
     <meta name="description" content="New Abhai Travels: cars, tempo travellers and buses for every journey, arranged since 2000. Rates confirmed by call or WhatsApp, no online payment.">
     <meta name="theme-color" content="#F9F9F8">
@@ -425,6 +436,9 @@
         @keyframes loaderBar { to { transform: scaleX(1); } }
         /* Hold the hero's own entrance until the loader starts lifting, so it plays where it can be seen. */
         html.is-loading .hero-fade-up, html.is-loading .reveal-img { animation-play-state: paused; }
+        /* The hero photo stays hidden (its settle-in held at the first frame) until it has fully
+           downloaded and decoded, so the blurry early passes of the progressive JPEG are never seen. */
+        html.hero-img-pending .reveal-img { animation-play-state: paused; }
 
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
@@ -522,8 +536,23 @@
          section's own leading edge instead (see below), so it travels with the scroll rather than
          sitting static while the boundary it's supposed to soften moves past it. -->
     <div class="fixed z-[-2] overflow-hidden hero-img-wrap" aria-hidden="true">
-        <img src="assets/images/hero.jpg" alt="" class="w-full h-full object-cover object-center editorial-img reveal-img" width="2400" height="1600">
+        <img src="assets/images/hero.jpg" alt="" fetchpriority="high" class="w-full h-full object-cover object-center editorial-img reveal-img" width="2400" height="1600">
     </div>
+    <script>
+        // Lets the hero photo's settle-in play once the image is fully loaded and decoded (or has
+        // failed), and after 4s at most, so a slow connection never leaves the backdrop empty.
+        (function () {
+            var root = document.documentElement;
+            var img = document.querySelector('.hero-img-wrap .reveal-img');
+            var released = false;
+            function release() { if (released) return; released = true; root.classList.remove('hero-img-pending'); }
+            if (!img) return release();
+            function ready() { (img.decode ? img.decode() : Promise.resolve()).then(release, release); }
+            if (img.complete) ready();
+            else { img.addEventListener('load', ready, { once: true }); img.addEventListener('error', release, { once: true }); }
+            setTimeout(release, 4000);
+        })();
+    </script>
 
     <main id="main">
 
@@ -2165,7 +2194,8 @@
             const root = document.documentElement;
             const loader = document.getElementById('page-loader');
             if (!loader) return;
-            // Already shown earlier this session: the head script skipped it, so just drop it.
+            // Arrived from another page of this site (or via back/forward): the head script skipped
+            // the loader, so just drop it.
             if (!root.classList.contains('has-loader')) { loader.remove(); return; }
             const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             const MIN_MS = reduceMotion ? 0 : 1600;
